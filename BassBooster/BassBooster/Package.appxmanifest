@@ -1,41 +1,54 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-
-  <Identity Name="a7e86879-3bfd-484f-85d3-70b8e1ebdf76"
-            Publisher="CN=Loku"
-            Version="1.0.0.0" />
-
+  <Identity Name="50105L0ku.BassBooster" Publisher="CN=E5A723E7-6147-4535-B1B4-CE41870C4464" Version="1.1.0.0" />
   <Properties>
-    <DisplayName>BassBooster</DisplayName>
-    <PublisherDisplayName>Loku</PublisherDisplayName>
+    <DisplayName>Bass Booster</DisplayName>
+    <PublisherDisplayName>L0ku</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
-
   <Prerequisites>
     <OSMinVersion>6.3.0</OSMinVersion>
     <OSMaxVersionTested>6.3.0</OSMaxVersionTested>
   </Prerequisites>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="App"
-        Executable="$targetnametoken$.exe"
-        EntryPoint="BassBooster.App">
-        <m2:VisualElements
-            DisplayName="BassBooster"
-            Square150x150Logo="Assets\Logo.png"
-            Square30x30Logo="Assets\SmallLogo.png"
-            Description="BassBooster"
-            ForegroundText="light"
-            BackgroundColor="#464646">
-            <m2:SplashScreen Image="Assets\SplashScreen.png" />
-        </m2:VisualElements>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="BassBooster.App">
+      <m2:VisualElements DisplayName="Bass Booster" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="BassBooster" ForegroundText="light" BackgroundColor="#464646">
+        <m2:DefaultTile ShortName="Bass Booster">
+        </m2:DefaultTile>
+        <m2:SplashScreen Image="Assets\SplashScreen.png" />
+      </m2:VisualElements>
+      <Extensions>
+        <Extension Category="windows.backgroundTasks" StartPage="MainPage.xaml">
+          <BackgroundTasks>
+            <Task Type="audio" />
+          </BackgroundTasks>
+        </Extension>
+        <Extension Category="windows.fileOpenPicker">
+          <FileOpenPicker>
+            <SupportedFileTypes>
+              <FileType>.mp3 ,wav</FileType>
+            </SupportedFileTypes>
+          </FileOpenPicker>
+        </Extension>
+        <Extension Category="windows.fileSavePicker">
+          <FileSavePicker>
+            <SupportedFileTypes>
+              <FileType>.txt</FileType>
+            </SupportedFileTypes>
+          </FileSavePicker>
+        </Extension>
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
+    <Capability Name="musicLibrary" />
+    <Capability Name="sharedUserCertificates" />
+    <Capability Name="videosLibrary" />
+    <Capability Name="picturesLibrary" />
+    <Capability Name="removableStorage" />
   </Capabilities>
 </Package>
