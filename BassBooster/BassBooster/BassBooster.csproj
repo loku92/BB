@@ -109,6 +109,9 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Lyrics.cs" />
+    <Compile Include="Models\Track.cs" />
+    <Compile Include="Models\TrackList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +121,10 @@
     <None Include="BassBooster_StoreKey.pfx" />
     <None Include="Package.StoreAssociation.xml" />
     <None Include="BassBooster_TemporaryKey.pfx" />
+    <Content Include="Assets\BadgeLogo.scale-180.png" />
+    <Content Include="Assets\SplashScreen.scale-140.png" />
+    <Content Include="Assets\Square310x310Logo.scale-100.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Fonts\LiveSymbol.ttf" />
     <None Include="packages.config" />
   </ItemGroup>
