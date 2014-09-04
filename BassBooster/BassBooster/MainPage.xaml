@@ -8,20 +8,33 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid HorizontalAlignment="Left" Height="720" Margin="20,20,0,0" VerticalAlignment="Top" Width="720" Grid.Column="2" Background="Black">
-            <Grid x:Name="Grid_Menu" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Grid.Row="3" Background="#FF42B620" Width="300" Height="100">
-                <TextBlock x:Name="Menu_Text" />
-                <ListView x:Name="Menu_List" />
-                <StackPanel x:Name="Menu_SP" />
-            </Grid>
-            <Grid x:Name="Grid_Right" HorizontalAlignment="Right" Height="300" Margin="0" VerticalAlignment="Top" Width="300" Grid.Row="2">
-                <StackPanel x:Name="SP_Player" VerticalAlignment="Top" Height="100" >
-                    <MediaElement x:Name="MP3_Player" Height="100" Visibility="Collapsed" AudioCategory="BackgroundCapableMedia"/>
-                </StackPanel>
-                <Frame x:Name="Frame_Tab" Content="Frame" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Bottom" Width="300" Height="198"/>
-            </Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="8*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="PlayerStackPanel" Grid.Column="0" Grid.Row="0" Background="#FF9C0000">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="8*"/>
+            </Grid.RowDefinitions>
+            <MediaElement x:Name="MP3Player" Visibility="Collapsed" AudioCategory="BackgroundCapableMedia" Grid.Row="0"/>
         </Grid>
+        
+        <StackPanel x:Name="ControlStackPanel" Grid.Column="1" Grid.Row="0" >
+            
+        </StackPanel>
+        <ListBox x:Name="NavTab" SelectionMode="Single"  HorizontalAlignment="Left"  Grid.Column="0" Grid.Row="1" Background="#FF9C0000" BorderThickness="0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="aa" Style="{StaticResource CaptionTextBlockStyle}" ></TextBlock>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
+        <Frame x:Name="TabFrame" Grid.Column="1" Grid.Row="1" Background="#FFE4E2E2"/>
     </Grid>
 </Page>
