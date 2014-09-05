@@ -33,6 +33,7 @@
         <Extension Category="windows.backgroundTasks" StartPage="MainPage.xaml">
           <BackgroundTasks>
             <Task Type="audio" />
+            <Task Type="timer" />
             <Task Type="pushNotification" />
           </BackgroundTasks>
         </Extension>

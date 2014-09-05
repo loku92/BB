@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BassBooster.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,9 +23,40 @@ namespace BassBooster
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public static MainPage Current;
+        
         public MainPage()
         {
             this.InitializeComponent();
+            Current = this;
+            
+        }        
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            NavTab.ItemsSource = TabList;
         }
+
+        #region PlayerManagement
+        #endregion
+
+        #region Tabs
+
+
+        public List<Tab> TabList = new List<Tab>
+        {
+            new Tab() { Name = "Playlist", ClassType = typeof(ListPage) },
+            new Tab() { Name = "Lyrics", ClassType = typeof(LyricsPage) },
+            new Tab() { Name = "OneDrive - synchronizing lyrics.", ClassType = typeof(OneDriveSyncPage) }
+        };
+
+        public List<Tab> Tabs
+        {
+            get { return this.TabList; }
+        }
+
+
+
+        #endregion
     }
 }

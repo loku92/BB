@@ -106,6 +106,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\TabConverter.cs" />
     <Compile Include="ListPage.xaml.cs">
       <DependentUpon>ListPage.xaml</DependentUpon>
     </Compile>
@@ -116,6 +117,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Lyrics.cs" />
+    <Compile Include="Models\Tab.cs" />
     <Compile Include="Models\Track.cs" />
     <Compile Include="Models\TrackList.cs" />
     <Compile Include="OneDriveSyncPage.xaml.cs">
