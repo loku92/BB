@@ -1,4 +1,5 @@
-﻿using BassBooster.Models;
+﻿using BassBooster.Common;
+using BassBooster.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,18 +24,39 @@ namespace BassBooster
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public static MainPage Current;
+        
         
         public MainPage()
         {
             this.InitializeComponent();
-            Current = this;
+            
             
         }        
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             NavTab.ItemsSource = TabList;
+
+            if (SuspensionManager.SessionState.ContainsKey("CurrentTab"))
+            {
+                NavTab.SelectedIndex = Convert.ToInt32(SuspensionManager.SessionState["CurrentTab"]);
+                NavTab.ScrollIntoView(NavTab.SelectedItem);
+            }
+            else
+            {
+                NavTab.SelectedIndex = 0;
+            }
+        }
+
+        private void NavTab_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {                   
+            ListBox tabList = sender as ListBox;
+            Tab t = tabList.SelectedItem as Tab;
+            if (t != null)
+            {
+                SuspensionManager.SessionState["CurrentTab"] = tabList.SelectedIndex;
+                TabFrame.Navigate(t.ClassType);
+            }
         }
 
         #region PlayerManagement
@@ -45,18 +67,12 @@ namespace BassBooster
 
         public List<Tab> TabList = new List<Tab>
         {
-            new Tab() { Name = "Playlist", ClassType = typeof(ListPage) },
-            new Tab() { Name = "Lyrics", ClassType = typeof(LyricsPage) },
-            new Tab() { Name = "OneDrive - synchronizing lyrics.", ClassType = typeof(OneDriveSyncPage) }
+            new Tab() { Name = "   ⏯  Playlist", ClassType = typeof(ListPage) },
+            new Tab() { Name = "   ⌨ Lyrics", ClassType = typeof(LyricsPage) },
+            new Tab() { Name = "   ③  OneDrive - synchronizing lyrics", ClassType = typeof(OneDriveSyncPage) }
         };
 
-        public List<Tab> Tabs
-        {
-            get { return this.TabList; }
-        }
-
-
-
+       
         #endregion
     }
 }
