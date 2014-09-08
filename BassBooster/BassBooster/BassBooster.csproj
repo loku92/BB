@@ -107,6 +107,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="Converters\NumberConverter.cs" />
     <Compile Include="Converters\TabConverter.cs" />
     <Compile Include="Converters\TrackConverter.cs" />
     <Compile Include="ListPage.xaml.cs">

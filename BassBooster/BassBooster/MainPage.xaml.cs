@@ -77,6 +77,10 @@ namespace BassBooster
             //save state to SM
             if (t != null)
             {
+                if (t.ClassType.Equals(typeof(ListPage)))
+                    TrackListBox.Visibility = Visibility.Visible;
+                else
+                    TrackListBox.Visibility = Visibility.Collapsed;
                 SuspensionManager.SessionState["CurrentTab"] = tabList.SelectedIndex;
                 TabFrame.Navigate(t.ClassType);
             }
@@ -204,7 +208,7 @@ namespace BassBooster
                 foreach (var f in files)
                 {
                     musicProperties = await f.Properties.GetMusicPropertiesAsync();
-                    Tracklist.Add(new Track (i,currentPlIndex,musicProperties.Artist,musicProperties.Title,f.Name,musicProperties.Duration));
+                    Tracklist.Add(new Track (i,currentPlIndex,Tracklist.Music.Count + 1,musicProperties.Artist,musicProperties.Title,f.Name,musicProperties.Duration));
                     i++;
                 }
                 //setting stream       
@@ -228,9 +232,8 @@ namespace BassBooster
             }  
         } 
     }
-
-    private enum REPEAT
+    enum REPEAT
     {
-        NONE,ALL,ONE
+        NONE, ALL, ONE
     }
 }

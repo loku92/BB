@@ -10,16 +10,18 @@ namespace BassBooster.Models
     {        
         public int Id { get; set; }
         public int ListId { get; set; }
+        public int DisplayId { get; set; }
         public string Artist { get; set; }
         public string Title { get; set; }
         public string FileName { get; set; }
         public int Length { get; set; }
 
-        public Track(int id, int listId, string artist, string title, string fName, TimeSpan length)
+        public Track(int id, int listId, int displayId, string artist, string title, string fName, TimeSpan length)
         {
 
             this.Id = id;
             this.ListId = listId;
+            this.DisplayId = displayId;
             this.Artist = artist;
             this.Title = title;
             this.FileName = fName;

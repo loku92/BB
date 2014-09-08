@@ -34,7 +34,7 @@ namespace BassBooster.Models
             return ranges[listId];
         }
 
-        internal void RangeAdd(int listId, int count)
+        public void RangeAdd(int listId, int count)
         {
             ranges.Add(ranges[listId] + count);
         }
@@ -42,6 +42,14 @@ namespace BassBooster.Models
         public string TrackToString(int i)
         {
             return Music[i].ToString();
+        }
+
+        public int[] FindById(int id)
+        {
+            var t = (from track in Music
+                    where track.DisplayId == id
+                    select track).Single();
+            return new int[]{t.Id,t.ListId};
         }
     }
 }

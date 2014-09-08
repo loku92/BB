@@ -6,6 +6,30 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <Grid Background="{ThemeResource AppBarBackgroundThemeBrush}" >
+        <!--<Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*" />
+            <ColumnDefinition Width="8.5*"/>
+        </Grid.ColumnDefinitions>-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="8.5*"/>
+        </Grid.RowDefinitions>
+        <WebView x:Name="BrowserWV" Width="1" Height="1" />
+        
+        <TextBlock HorizontalAlignment="Left" Margin="40,10,0,0" TextWrapping="Wrap" Grid.Column="0" Text="Artist:" VerticalAlignment="Top" Style="{StaticResource BodyTextBlockStyle}" Width="50"/>
+        <TextBlock HorizontalAlignment="Left" Margin="200,10,0,0" TextWrapping="Wrap" Grid.Column="0" Text="Title:" VerticalAlignment="Top" Style="{StaticResource BodyTextBlockStyle}"/>
+        <TextBox x:Name="ArtistBox" HorizontalAlignment="Left" Margin="40,0,0,0" TextWrapping="Wrap" Grid.Column="0" Text="Artist" VerticalAlignment="Center" Width="150"/>
+        <TextBox x:Name="TitleBox" HorizontalAlignment="Left" Margin="200,0,0,0"  Grid.Column="0" TextWrapping="Wrap" Text="Title" VerticalAlignment="Center" Width="150"/>
+        <Button x:Name="LyricsDlButton" Grid.Column="0" Content="Search" HorizontalAlignment="Left" Margin="200,0,0,0" VerticalAlignment="Bottom" Click="LyricsDlButton_Click" />
+        <Button x:Name="LoadLyricsButton" Grid.Column="0" Content="Load" HorizontalAlignment="Left" Margin="300,0,0,0" VerticalAlignment="Bottom" Click="LyricsDlButton_Click" />
+        <Button x:Name="SaveLyricsButton" Grid.Column="0" Content="Save " HorizontalAlignment="Left" Margin="400,0,0,0" VerticalAlignment="Bottom" Click="LyricsDlButton_Click" />
+        <ScrollViewer Grid.Row="1" Margin="20,20,0,0" >
+            <TextBox x:Name="LyricsTextBox"   TextWrapping="Wrap" Text="" Background="{ThemeResource AppBarBackgroundThemeBrush}" Foreground="#FFD6D6D6" BorderThickness="0"/>
+        </ScrollViewer>
+        
 
+
+    </Grid>
 
 </Page>

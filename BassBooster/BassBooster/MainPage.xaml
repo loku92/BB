@@ -9,8 +9,9 @@
     mc:Ignorable="d">
 
     <Page.Resources>
+        <Converters:NumberConverter x:Key="NumberConverter1"/>
         <Converters:TrackConverter x:Key="TrackConverter"/>
-        <Converters:TabConverter x:Key="TabConverter"/>
+        <Converters:TabConverter x:Key="TabConverter"/>        
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -79,7 +80,16 @@
                  VerticalAlignment="Top" Margin="0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Converter={StaticResource TrackConverter}}" Style="{StaticResource BodyTextBlockStyle}" Foreground="RoyalBlue"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2.5*" />
+                            <ColumnDefinition Width="5.5*"/>
+                            <ColumnDefinition Width="2.5*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Converter={StaticResource NumberConverter1}}" Style="{StaticResource BodyTextBlockStyle}" Foreground="RoyalBlue" Grid.Column="0" />
+                        <TextBlock Text="{Binding Converter={StaticResource TrackConverter}}" Style="{StaticResource BodyTextBlockStyle}" Foreground="RoyalBlue" Grid.Column="1" Margin="20,0,0,0" />
+                        <TextBlock Text="{Binding Converter={StaticResource NumberConverter1}}" Style="{StaticResource BodyTextBlockStyle}" Foreground="RoyalBlue" Grid.Column="2" Margin="30,0,0,0" HorizontalAlignment="Right" />
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
