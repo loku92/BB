@@ -9,6 +9,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
+        <Converters:TrackConverter x:Key="TrackConverter"/>
         <Converters:TabConverter x:Key="TabConverter"/>
     </Page.Resources>
 
@@ -49,7 +50,7 @@
             <AppBarButton x:Name="NextButton"  Icon="Next" Label="Next"   Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="210,0,0,0"/>
             <!-- -->
             <Image x:Name="VolumeImg" Grid.Column="0" Grid.Row="1" Height="25"  VerticalAlignment="Center" HorizontalAlignment="Left" Width="25" Source="Assets/Speaker_Icon_white.png" Margin="310,0,0,0"/>
-            <Slider x:Name="VolumeSlider" Grid.Column="0" Grid.Row="1" LargeChange="9" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="330,0,0,0" Orientation="Vertical" Height="75" Value="50"/>
+            <Slider x:Name="VolumeSlider" Grid.Column="0" Grid.Row="1" LargeChange="9" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="330,0,0,0" Orientation="Vertical" Height="75" Value="100" ValueChanged="VolumeSlider_ValueChanged"/>
 
             <AppBarButton x:Name="ShuffleButton"  Icon="Shuffle" Label="Shuffle"   VerticalAlignment="Center" HorizontalAlignment="Left"  Grid.Row="1" Margin="430,0,0,0"/>
             <AppBarButton x:Name="RepeatButton" Icon="RepeatAll" Label="Repear All"   Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="530,0,0,0"/>
@@ -75,10 +76,10 @@
         </Grid>
         <Frame x:Name="TabFrame" Grid.Column="1" Grid.Row="1" Background="#FFE4E2E2"/>
         <ListBox x:Name="TrackListBox" SelectionMode="Single"  HorizontalAlignment="Left"  Grid.Column="1" Grid.Row="1"  BorderThickness="0" Style="{StaticResource TabStyleListBox}"
-                 VerticalAlignment="Top" Margin="0" SelectionChanged="NavTab_SelectionChanged">
+                 VerticalAlignment="Top" Margin="0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Converter={StaticResource TabConverter}}" Style="{StaticResource BodyTextBlockStyle}" Foreground="WhiteSmoke"/>
+                    <TextBlock Text="{Binding Converter={StaticResource TrackConverter}}" Style="{StaticResource BodyTextBlockStyle}" Foreground="RoyalBlue"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

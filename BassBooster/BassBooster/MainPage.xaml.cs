@@ -27,17 +27,19 @@ namespace BassBooster
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        
+        #region Vars
         public static string CurrentlyPlaying;
+        private bool empty; // true if there aren't any tracks loaded
         private int? CurrentList;
         private int? CurrentTrack;
         private List<IReadOnlyList<Windows.Storage.StorageFile>> Playlist = null;
         private TrackList Tracklist;
-        
+
+        #endregion
+
         public MainPage()
         {
-            this.InitializeComponent();
-            i = 0;
+            this.InitializeComponent();            
             Tracklist = new TrackList();
             MP3Player.MediaEnded += MP3Player_MediaEnded;
             MediaControl.PausePressed += MediaControl_pp;
@@ -45,15 +47,17 @@ namespace BassBooster
             MediaControl.PlayPauseTogglePressed += MediaControl_plptp;
             MediaControl.StopPressed += MediaControl_sp;
             MediaControl.NextTrackPressed += MediaControl_ntp;
+            MP3Player.Volume = 1.0;
+            TrackListBox.ItemsSource = null;
+            empty = true;
             
-        }
-
-        
+        }        
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            //setting current tab as selected
             NavTab.ItemsSource = TabList;
-            TrackListBox.ItemsSource  = TabList;
+            
             //check if SM has saved tab
             if (SuspensionManager.SessionState.ContainsKey("CurrentTab"))
             {
@@ -70,6 +74,7 @@ namespace BassBooster
         {                   
             ListBox tabList = sender as ListBox;
             Tab t = tabList.SelectedItem as Tab;
+            //save state to SM
             if (t != null)
             {
                 SuspensionManager.SessionState["CurrentTab"] = tabList.SelectedIndex;
@@ -89,6 +94,7 @@ namespace BassBooster
             throw new NotImplementedException();
         }
 
+        // action for play pause button when minimalized
         private async void MediaControl_plptp(object sender, object e)
         {
             //if app minimalized getting access to bgtask and pausing/playing 
@@ -122,6 +128,11 @@ namespace BassBooster
             throw new NotImplementedException();
         }
 
+        private void VolumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (MP3Player != null)
+                MP3Player.Volume = ((double)VolumeSlider.Value) / 100.0;
+        }
 
         #endregion
 
@@ -137,23 +148,25 @@ namespace BassBooster
 
        
         #endregion
-        public int i;
+        
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             if (MP3Player.CurrentState == MediaElementState.Playing){
-                PlayButton.Icon = new SymbolIcon(Symbol.Pause);
-                i=1;
-            }
-            else
-            {
-                i = 0;
+                MP3Player.Pause();
                 PlayButton.Icon = new SymbolIcon(Symbol.Play);
+                
             }
-            TabList.Add(new Tab { Name = "aaa", ClassType = typeof(ListPage) });
-            TrackListBox.ItemsSource = null;
-            TrackListBox.ItemsSource = TabList;
+            else if(!empty && (MP3Player.CurrentState == MediaElementState.Paused || MP3Player.CurrentState == MediaElementState.Stopped ))
+            {
+                MP3Player.Play();
+                PlayButton.Icon = new SymbolIcon(Symbol.Pause);
+            }
+            //TabList.Add(new Tab { Name = "aaa", ClassType = typeof(ListPage) });
+            //TrackListBox.ItemsSource = null;
+            //TrackListBox.ItemsSource = TabList;
         }
 
+        
         private async void FileOpenButton_Click(object sender, RoutedEventArgs e)
         {
             bool wasPlaying;
@@ -169,6 +182,9 @@ namespace BassBooster
             //adding file types
             fop.FileTypeFilter.Add(".mp3");
             fop.FileTypeFilter.Add(".wav");
+            fop.FileTypeFilter.Add(".wma");
+            fop.FileTypeFilter.Add(".aac");
+            fop.FileTypeFilter.Add(".asf");
             //if this.plyalist is empty create new list
             if (Playlist == null)
                 Playlist = new List<IReadOnlyList<Windows.Storage.StorageFile>>();
@@ -180,13 +196,15 @@ namespace BassBooster
                 //object for music properties
                 MusicProperties musicProperties;
                 //adding 'miniplaylist' to playlist
-                Playlist.Add(files);
+                Playlist.Add(files);                
                 int currentPlIndex = Playlist.Count - 1;
+                //add 'miniplaylist' ranges
+                Tracklist.RangeAdd(currentPlIndex, files.Count);
                 int i = 0;
                 foreach (var f in files)
                 {
                     musicProperties = await f.Properties.GetMusicPropertiesAsync();
-                    Tracklist.Add(new Track (i,currentPlIndex,musicProperties.Artist,musicProperties.Title,musicProperties.Duration));
+                    Tracklist.Add(new Track (i,currentPlIndex,musicProperties.Artist,musicProperties.Title,f.Name,musicProperties.Duration));
                     i++;
                 }
                 //setting stream       
@@ -194,22 +212,25 @@ namespace BassBooster
                 if (!wasPlaying)
                 {
                     MP3Player.SetSource(stream, Playlist[currentPlIndex][0].ContentType);
+                    //mark currently played file
                     CurrentList = currentPlIndex;
                     CurrentTrack = 0;
+                    TitleBox.Text = Tracklist.TrackToString(0);
                 }
+                //refresh track listbox
+                TrackListBox.ItemsSource = null;
+                TrackListBox.ItemsSource = Tracklist.Music;
+                empty = false;
                 MP3Player.Play();
                 //set button icon to pause
-                PlayButton.Icon = new SymbolIcon(Symbol.Pause);
-            }
-            //TODO: else
-            else
-            {
-                ;
-            }
-                
+                PlayButton.Icon = new SymbolIcon(Symbol.Pause);                
+               
+            }  
+        } 
+    }
 
-        }
-        
-        
+    private enum REPEAT
+    {
+        NONE,ALL,ONE
     }
 }
