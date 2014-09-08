@@ -1,10 +1,12 @@
-﻿using System;
+﻿using BassBooster.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -16,7 +18,7 @@ using Windows.Web.Http;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-//TODO: save/load , usunac z poczatku i konca 2 linijki tekstu, zapisywanie stanu
+
 
 namespace BassBooster
 {
@@ -25,6 +27,7 @@ namespace BassBooster
     /// </summary>
     public sealed partial class LyricsPage : Page
     {
+        private string CurrentTitle;
         
         public LyricsPage()
         {
@@ -32,6 +35,17 @@ namespace BassBooster
             BrowserWV.NavigationCompleted += Browser_NavigationCompleted;
             BrowserWV.LoadCompleted += Browser_LoadCompleted;
             
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (SuspensionManager.SessionState.ContainsKey("Lyrics"))
+            {
+                LyricsTextBox.Text = Convert.ToString(SuspensionManager.SessionState["Lyrics"]);
+                ArtistBox.Text = Convert.ToString(SuspensionManager.SessionState["Artist"]);
+                TitleBox.Text = Convert.ToString(SuspensionManager.SessionState["Title"]);
+                base.OnNavigatedTo(e);
+            }
         }
 
         private void Browser_LoadCompleted(object sender, NavigationEventArgs e)
@@ -46,12 +60,18 @@ namespace BassBooster
                 //if title wasn't found it looks like "404 - Nie ma takiego pliku! - www.tekstowo.pl   " 
                 if (title.Contains("404 - Nie ma takiego pliku!")){
                     LyricsTextBox.Text = "Lyrics weren't found. Check artist or title spelling";
+                    SaveLyricsButton.Visibility = Visibility.Collapsed;
                 }
                 else{
-                    LyricsTextBox.Text = await BrowserWV.InvokeScriptAsync("eval", new string[] { "document.getElementsByClassName('song-text')[0].innerText;" });
+                    string lyrics = await BrowserWV.InvokeScriptAsync("eval", new string[] { "document.getElementsByClassName('song-text')[0].innerText;" });
+                    lyrics = lyrics.Replace("Tekst piosenki:", " ");
+                    lyrics = lyrics.Replace("Poznaj historię zmian tego tekstu", " ");
+                    LyricsTextBox.Text = lyrics;
+                    SuspensionManager.SessionState["Lyrics"] = lyrics;
+                    SaveLyricsButton.Visibility = Visibility.Visible;
                 }
             }
-            catch (Exception e1)
+            catch (Exception e)
             {
                 LyricsTextBox.Text = "Lyrics weren't found. Check artist or title spelling";
             }
@@ -65,12 +85,38 @@ namespace BassBooster
             
             string artist = ArtistBox.Text;
             string title = TitleBox.Text;
+            SuspensionManager.SessionState["Artist"] = artist;
+            SuspensionManager.SessionState["Title"] = title;
             StringParser(ref title);
             StringParser(ref artist);
             BrowserWV.Navigate(new Uri("http://tekstowo.pl/piosenka," + artist + "," + title + ".html"));
+            CurrentTitle = artist + "_" + title;
+        }
+        
+
+        private async void SaveLyricsButton_Click(object sender, RoutedEventArgs e)
+        {
+            StorageFolder folder = Windows.Storage.KnownFolders.MusicLibrary;
+            StorageFile sampleFile = await folder.CreateFileAsync(CurrentTitle + ".bbf", CreationCollisionOption.ReplaceExisting);
+            await Windows.Storage.FileIO.WriteTextAsync(sampleFile, LyricsTextBox.Text);
+            SaveConfTextBlock.Visibility = Visibility.Visible;
         }
 
-        private void StringParser(ref string text){
+        private async void LoadLyricsButton_Click(object sender, RoutedEventArgs e)
+        {
+            Windows.Storage.Pickers.FileOpenPicker fop = new Windows.Storage.Pickers.FileOpenPicker();
+            fop.FileTypeFilter.Add(".bbf");
+            fop.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
+            StorageFile file = await fop.PickSingleFileAsync();
+            if (file != null)
+            {
+                LyricsTextBox.Text = await Windows.Storage.FileIO.ReadTextAsync(file);
+                SuspensionManager.SessionState["Lyrics"] = LyricsTextBox.Text;
+            }
+        }
+
+        private void StringParser(ref string text)
+        {
             text = text.Trim();
             text = text.ToLower();
             text = text.Replace(" ", "_");

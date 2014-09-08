@@ -19,15 +19,16 @@
         
         <TextBlock HorizontalAlignment="Left" Margin="40,10,0,0" TextWrapping="Wrap" Grid.Column="0" Text="Artist:" VerticalAlignment="Top" Style="{StaticResource BodyTextBlockStyle}" Width="50"/>
         <TextBlock HorizontalAlignment="Left" Margin="200,10,0,0" TextWrapping="Wrap" Grid.Column="0" Text="Title:" VerticalAlignment="Top" Style="{StaticResource BodyTextBlockStyle}"/>
-        <TextBox x:Name="ArtistBox" HorizontalAlignment="Left" Margin="40,0,0,0" TextWrapping="Wrap" Grid.Column="0" Text="Artist" VerticalAlignment="Center" Width="150"/>
-        <TextBox x:Name="TitleBox" HorizontalAlignment="Left" Margin="200,0,0,0"  Grid.Column="0" TextWrapping="Wrap" Text="Title" VerticalAlignment="Center" Width="150"/>
+        <TextBox x:Name="ArtistBox" HorizontalAlignment="Left" Margin="40,0,0,0" TextWrapping="Wrap" Grid.Column="0" Text="" VerticalAlignment="Center" Width="150"/>
+        <TextBox x:Name="TitleBox" HorizontalAlignment="Left" Margin="200,0,0,0"  Grid.Column="0" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="150"/>
         <Button x:Name="LyricsDlButton" Grid.Column="0" Content="Search" HorizontalAlignment="Left" Margin="200,0,0,0" VerticalAlignment="Bottom" Click="LyricsDlButton_Click" />
-        <Button x:Name="LoadLyricsButton" Grid.Column="0" Content="Load" HorizontalAlignment="Left" Margin="300,0,0,0" VerticalAlignment="Bottom" Click="LyricsDlButton_Click" />
-        <Button x:Name="SaveLyricsButton" Grid.Column="0" Content="Save " HorizontalAlignment="Left" Margin="400,0,0,0" VerticalAlignment="Bottom" Click="LyricsDlButton_Click" />
+        <Button x:Name="LoadLyricsButton" Grid.Column="0" Content="Load" HorizontalAlignment="Left" Margin="300,0,0,0" VerticalAlignment="Bottom" Click="LoadLyricsButton_Click" />
+        <Button x:Name="SaveLyricsButton" Grid.Column="0" Content="Save " HorizontalAlignment="Left" Margin="400,0,0,0" VerticalAlignment="Bottom" Click="SaveLyricsButton_Click" Visibility="Collapsed" />
         <ScrollViewer Grid.Row="1" Margin="20,20,0,0" >
             <TextBox x:Name="LyricsTextBox"   TextWrapping="Wrap" Text="" Background="{ThemeResource AppBarBackgroundThemeBrush}" Foreground="#FFD6D6D6" BorderThickness="0"/>
         </ScrollViewer>
-        
+        <TextBlock x:Name="SaveConfTextBlock" HorizontalAlignment="Left" Grid.Column="0" Margin="400,50,0,0" TextWrapping="Wrap" Text="Lyrics saved successfully in Music directory." VerticalAlignment="Top" Foreground="#FF58B92B" Visibility="Collapsed"/>
+
 
 
     </Grid>

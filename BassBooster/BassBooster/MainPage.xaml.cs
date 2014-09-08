@@ -232,7 +232,7 @@ namespace BassBooster
             }  
         } 
     }
-    enum REPEAT
+    enum Repeat
     {
         NONE, ALL, ONE
     }
