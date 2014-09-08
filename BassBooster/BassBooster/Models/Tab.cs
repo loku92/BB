@@ -12,9 +12,5 @@ namespace BassBooster.Models
 
         public Type ClassType { get; set; }
 
-        public override string ToString()
-        {
-            return Name;
-        }
     }
 }
