@@ -82,7 +82,7 @@ namespace BassBooster
 
         private void LyricsDlButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            LyricsTextBox.Text = "Searching...";
             string artist = ArtistBox.Text;
             string title = TitleBox.Text;
             SuspensionManager.SessionState["Artist"] = artist;
