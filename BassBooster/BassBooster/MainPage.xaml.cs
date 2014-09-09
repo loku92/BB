@@ -17,6 +17,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Notifications;
+using Windows.Data.Xml.Dom;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -51,13 +53,15 @@ namespace BassBooster
             MediaControl.PlayPauseTogglePressed += MediaControl_plptp;
             MediaControl.StopPressed += MediaControl_sp;
             MediaControl.NextTrackPressed += MediaControl_ntp;
-            MediaControl.PreviousTrackPressed += MediaControl_ptp;
+            MediaControl.PreviousTrackPressed += MediaControl_ptp;            
             MP3Player.Volume = 1.0;
             TrackListBox.ItemsSource = null;
             Empty = true;
             Shuffle = false;
             
         }
+
+        
 
              
 
@@ -219,6 +223,7 @@ namespace BassBooster
                 //add 'miniplaylist' ranges
                 Tracklist.RangeAdd(currentPlIndex, files.Count);
                 int i = 0;
+                int sec;
                 foreach (var f in files)
                 {
                     musicProperties = await f.Properties.GetMusicPropertiesAsync();
@@ -235,7 +240,8 @@ namespace BassBooster
                     CurrentTrack = 0;
                     CurrentId = 0;
                     TitleBox.Text = Tracklist.TrackToString(0);
-                    TimeBox.Text = Tracklist.GetDurationById(0);
+                    TimeBox.Text = Tracklist.GetDurationStringById(0);
+                    UpdateTile(Tracklist.GetDurationIntById(0));
                 }
                 //refresh track listbox
                 TrackListBox.ItemsSource = null;
@@ -244,9 +250,14 @@ namespace BassBooster
                 MP3Player.Play();
                 TrackListBox.SelectedIndex = CurrentId;
                 //set button icon to pause
-                PlayButton.Icon = new SymbolIcon(Symbol.Pause);                
-               
-            }  
+                PlayButton.Icon = new SymbolIcon(Symbol.Pause);
+
+            }
+            else //if no file was chosen then continue
+            {
+                if (wasPlaying)
+                    MP3Player.Play();
+            }
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
@@ -294,8 +305,8 @@ namespace BassBooster
             //updating page
             TrackListBox.SelectedIndex = CurrentId;
             TitleBox.Text = Tracklist.TrackToString(CurrentId);
-            TimeBox.Text = Tracklist.GetDurationById(CurrentId);
-            UpdateTile(TitleBox.Text);
+            TimeBox.Text = Tracklist.GetDurationStringById(CurrentId);
+            UpdateTile(Tracklist.GetDurationIntById(CurrentId));
         }
 
         private void ClearListButton_Click(object sender, RoutedEventArgs e)
@@ -307,11 +318,19 @@ namespace BassBooster
                 TrackListBox.ItemsSource = null;
                 TrackListBox.ItemsSource = Tracklist.Music;
                 Playlist.Clear();
+                Windows.UI.Notifications.TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+
             }
         }
-        //TODO: updatetile
-        private void UpdateTile(string title)
+        
+        private void UpdateTile(int sec)
         {
+            XmlDocument tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileWide310x150Text04);
+            XmlNodeList tileTextAttributes = tileXml.GetElementsByTagName("text");
+            tileTextAttributes[0].InnerText = TitleBox.Text;
+            TileNotification tileNotification = new TileNotification(tileXml);
+            tileNotification.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(sec);
+            TileUpdateManager.CreateTileUpdaterForApplication().Update(tileNotification);
 
         }
 

@@ -13,7 +13,7 @@ namespace BassBooster.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             Track t = value as Track;
-            return t.DisplayId + " . " ;
+            return (t.DisplayId + 1 ) + " . " ;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

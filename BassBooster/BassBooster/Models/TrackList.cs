@@ -52,7 +52,7 @@ namespace BassBooster.Models
             return new int[]{t.Id,t.ListId};
         }
 
-        public string GetDurationById(int id)
+        public string GetDurationStringById(int id)
         {
             var t = (from track in Music
                      where track.DisplayId == id
@@ -65,6 +65,14 @@ namespace BassBooster.Models
             else
                 duration += sec;
             return  duration;
+        }
+
+        public int GetDurationIntById(int id)
+        {
+            var t = (from track in Music
+                     where track.DisplayId == id
+                     select track).Single();
+            return t.Duration;
         }
     }
 }
