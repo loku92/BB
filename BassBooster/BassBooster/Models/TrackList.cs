@@ -51,5 +51,20 @@ namespace BassBooster.Models
                     select track).Single();
             return new int[]{t.Id,t.ListId};
         }
+
+        public string GetDurationById(int id)
+        {
+            var t = (from track in Music
+                     where track.DisplayId == id
+                     select track).Single();
+            string duration = "";
+            duration += t.Duration / 60 + ":";
+            int sec = t.Duration % 60;
+            if (sec < 10)
+                duration += "0" + sec;
+            else
+                duration += sec;
+            return  duration;
+        }
     }
 }

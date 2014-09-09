@@ -20,6 +20,8 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
+//TODO: Tile, repeat, time slider
+
 namespace BassBooster
 {
     /// <summary>
@@ -29,10 +31,12 @@ namespace BassBooster
     {
         #region Vars
         public static string CurrentlyPlaying;
-        private bool empty; // true if there aren't any tracks loaded
-        private int? CurrentList;
-        private int? CurrentTrack;
-        private List<IReadOnlyList<Windows.Storage.StorageFile>> Playlist = null;
+        private bool Empty; // true if there aren't any tracks loaded
+        private bool Shuffle;
+        private int CurrentList;
+        private int CurrentTrack;
+        private int CurrentId;
+        private List<IReadOnlyList<Windows.Storage.StorageFile>> Playlist = null; // adding files as 'miniplaylist' every time we add new FileOpenPicker because object that we get as playlist is readonly
         private TrackList Tracklist;
 
         #endregion
@@ -47,11 +51,15 @@ namespace BassBooster
             MediaControl.PlayPauseTogglePressed += MediaControl_plptp;
             MediaControl.StopPressed += MediaControl_sp;
             MediaControl.NextTrackPressed += MediaControl_ntp;
+            MediaControl.PreviousTrackPressed += MediaControl_ptp;
             MP3Player.Volume = 1.0;
             TrackListBox.ItemsSource = null;
-            empty = true;
+            Empty = true;
+            Shuffle = false;
             
-        }        
+        }
+
+             
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -88,14 +96,31 @@ namespace BassBooster
 
         #region PlayerManagement
 
-        private void MediaControl_ntp(object sender, object e)
+        //using dispatcher to get access to thread that runs player
+        //next track pressed
+        private async void MediaControl_ntp(object sender, object e)
         {
-            throw new NotImplementedException();
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                NextButton_Click(null, null);
+            });
         }
-
-        private void MediaControl_sp(object sender, object e)
+        //previous track pressed
+        private async void MediaControl_ptp(object sender, object e)
         {
-            throw new NotImplementedException();
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                PrevButton_Click(null, null);
+            });
+        }   
+
+        //stopped pressed
+        private async void MediaControl_sp(object sender, object e)
+        {
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                MP3Player.Stop();
+            });
         }
 
         // action for play pause button when minimalized
@@ -115,21 +140,28 @@ namespace BassBooster
             });
         }
 
-        private void MediaControl_plp(object sender, object e)
+        //play  pressed
+        private async void MediaControl_plp(object sender, object e)
         {
-            //
-            throw new NotImplementedException();
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (!Empty)
+                    MP3Player.Play();
+            });
         }
 
-
-        private void MediaControl_pp(object sender, object e)
+        //pause pressed
+        private async void MediaControl_pp(object sender, object e)
         {
-            throw new NotImplementedException();
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                MP3Player.Pause();
+            });
         }
 
         private void MP3Player_MediaEnded(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            NextButton_Click(null, null);
         }
 
         private void VolumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -137,21 +169,6 @@ namespace BassBooster
             if (MP3Player != null)
                 MP3Player.Volume = ((double)VolumeSlider.Value) / 100.0;
         }
-
-        #endregion
-
-        #region Tabs
-
-
-        public List<Tab> TabList = new List<Tab>
-        {
-            new Tab() { Name = "   ⏯  Playlist", ClassType = typeof(ListPage) },
-            new Tab() { Name = "   ⌨ Lyrics", ClassType = typeof(LyricsPage) },
-            new Tab() { Name = "   ③  OneDrive - synchronizing lyrics", ClassType = typeof(OneDriveSyncPage) }
-        };
-
-       
-        #endregion
         
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
@@ -160,14 +177,11 @@ namespace BassBooster
                 PlayButton.Icon = new SymbolIcon(Symbol.Play);
                 
             }
-            else if(!empty && (MP3Player.CurrentState == MediaElementState.Paused || MP3Player.CurrentState == MediaElementState.Stopped ))
+            else if(!Empty && (MP3Player.CurrentState == MediaElementState.Paused || MP3Player.CurrentState == MediaElementState.Stopped ))
             {
                 MP3Player.Play();
                 PlayButton.Icon = new SymbolIcon(Symbol.Pause);
             }
-            //TabList.Add(new Tab { Name = "aaa", ClassType = typeof(ListPage) });
-            //TrackListBox.ItemsSource = null;
-            //TrackListBox.ItemsSource = TabList;
         }
 
         
@@ -201,14 +215,14 @@ namespace BassBooster
                 MusicProperties musicProperties;
                 //adding 'miniplaylist' to playlist
                 Playlist.Add(files);                
-                int currentPlIndex = Playlist.Count - 1;
+                int currentPlIndex = Playlist.Count - 1; // getting number of already existing 'miniplaylisy'
                 //add 'miniplaylist' ranges
                 Tracklist.RangeAdd(currentPlIndex, files.Count);
                 int i = 0;
                 foreach (var f in files)
                 {
                     musicProperties = await f.Properties.GetMusicPropertiesAsync();
-                    Tracklist.Add(new Track (i,currentPlIndex,Tracklist.Music.Count + 1,musicProperties.Artist,musicProperties.Title,f.Name,musicProperties.Duration));
+                    Tracklist.Add(new Track (i,currentPlIndex,Tracklist.Music.Count,musicProperties.Artist,musicProperties.Title,f.Name,musicProperties.Duration));
                     i++;
                 }
                 //setting stream       
@@ -219,18 +233,134 @@ namespace BassBooster
                     //mark currently played file
                     CurrentList = currentPlIndex;
                     CurrentTrack = 0;
+                    CurrentId = 0;
                     TitleBox.Text = Tracklist.TrackToString(0);
+                    TimeBox.Text = Tracklist.GetDurationById(0);
                 }
                 //refresh track listbox
                 TrackListBox.ItemsSource = null;
                 TrackListBox.ItemsSource = Tracklist.Music;
-                empty = false;
+                Empty = false;
                 MP3Player.Play();
+                TrackListBox.SelectedIndex = CurrentId;
                 //set button icon to pause
                 PlayButton.Icon = new SymbolIcon(Symbol.Pause);                
                
             }  
-        } 
+        }
+
+        private void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Empty == false)
+            {
+                MP3Player.Stop();
+                if (!Shuffle)
+                    if (CurrentId < (Tracklist.Music.Count - 1))
+                        CurrentId++;
+                    else
+                        CurrentId = 0;
+                else
+                    CurrentId = (new Random()).Next(0, (int)Tracklist.Length);
+                CommonAction();
+            }
+
+        }
+
+        private void PrevButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Empty == false)
+            {
+                MP3Player.Stop();
+                if (!Shuffle)
+                    if (CurrentId > 0)
+                        CurrentId--;
+                    else
+                        CurrentId = Tracklist.Music.Count - 1;
+                else
+                    CurrentId = (new Random()).Next(0, (int)Tracklist.Length);
+                CommonAction();
+            }
+        }
+
+        private async void CommonAction()
+        {
+            //gathering file postion on playlsit
+            int[] xx = Tracklist.FindById(CurrentId);
+            CurrentTrack = xx[0];
+            CurrentList = xx[1];
+            var stream = await Playlist[CurrentList][CurrentTrack].OpenAsync(Windows.Storage.FileAccessMode.Read);
+            MP3Player.SetSource(stream, Playlist[CurrentList][CurrentTrack].ContentType);
+            MP3Player.Play();
+            //updating page
+            TrackListBox.SelectedIndex = CurrentId;
+            TitleBox.Text = Tracklist.TrackToString(CurrentId);
+            TimeBox.Text = Tracklist.GetDurationById(CurrentId);
+            UpdateTile(TitleBox.Text);
+        }
+
+        private void ClearListButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Empty) { 
+                MP3Player.Stop();
+                Tracklist = new TrackList();
+                Empty = true;            
+                TrackListBox.ItemsSource = null;
+                TrackListBox.ItemsSource = Tracklist.Music;
+                Playlist.Clear();
+            }
+        }
+        //TODO: updatetile
+        private void UpdateTile(string title)
+        {
+
+        }
+
+        private void ShuffleButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Shuffle)
+            {
+                Shuffle = false;
+                ShuffleButton.Label = "Shuffle is off";
+            }
+            else
+            {
+                Shuffle = true;
+                ShuffleButton.Label = "Shuffle is on";
+            }
+        }
+
+        private void TrackListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MP3Player.Stop();
+            CurrentId = TrackListBox.SelectedIndex;
+            CommonAction();
+        }
+
+        private void TrackListBox_SelectionChanged(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            MP3Player.Stop();
+            CurrentId = TrackListBox.SelectedIndex;
+            CommonAction();
+        }
+
+        #endregion
+
+        #region Tabs
+
+
+        public List<Tab> TabList = new List<Tab>
+        {
+            new Tab() { Name = "   ⏯  Playlist", ClassType = typeof(ListPage) },
+            new Tab() { Name = "   ⌨ Lyrics", ClassType = typeof(LyricsPage) },
+            new Tab() { Name = "   ③  OneDrive - synchronizing lyrics", ClassType = typeof(OneDriveSyncPage) }
+        };
+
+
+        #endregion
+
+        
+
+        
     }
     enum Repeat
     {
