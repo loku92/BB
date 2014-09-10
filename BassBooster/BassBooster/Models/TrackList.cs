@@ -9,36 +9,19 @@ namespace BassBooster.Models
     public class TrackList
     {
         public List<Track> Music { get; set; }
-        public int? Length { get { return Music.Count; }  }
-        public List<int> ranges { get; set; }
+        public int? Length { get { return Music.Count; }  }        
 
         public TrackList()
         {
-            Music = new List<Track>();
-            ranges = new List<int>();
-            ranges.Add(0);
+            Music = new List<Track>();            
         }
 
         public void Add(Track t)
         {
             Music.Add(t);
-
         }
 
-        public int Last(int listId)
-        {
-            return ranges[listId+1]-1;
-        }
-
-        public int First(int listId){
-            return ranges[listId];
-        }
-
-        public void RangeAdd(int listId, int count)
-        {
-            ranges.Add(ranges[listId] + count);
-        }
-
+           
         public string TrackToString(int i)
         {
             return Music[i].ToString();

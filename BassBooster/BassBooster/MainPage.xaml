@@ -41,9 +41,9 @@
                     <ColumnDefinition Width="4*" />
                     <ColumnDefinition Width="6*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="TimeBox" Grid.Column="1" HorizontalAlignment="Center" Margin="0,20,0,0" TextWrapping="Wrap" Text="     " VerticalAlignment="Center" />
+                <TextBlock x:Name="TimeBox" Grid.Column="1" HorizontalAlignment="Center" Margin="0,20,0,0" TextWrapping="Wrap" Text="0:00" VerticalAlignment="Center" />
                 <TextBlock x:Name="TitleBox" Grid.Column="0" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="Artist - Title" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlockStyle}"/>
-                <Slider x:Name="TimeSlider" Grid.Column="1" LargeChange="9" VerticalAlignment="Center" Margin="10,0,30,0"/>
+                <Slider x:Name="TimeSlider" Grid.Column="1" LargeChange="9" VerticalAlignment="Center" Margin="10,0,30,0" ValueChanged="TimeSlider_ValueChanged" Foreground="#FF50AC47" IsThumbToolTipEnabled="False"/>
             </Grid>
             <!-- -->
             <AppBarButton x:Name="PrevButton"  Icon="Previous" Label="Previous"   Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Click="PrevButton_Click"/>
