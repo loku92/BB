@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Notifications;
 using Windows.Data.Xml.Dom;
+using Microsoft.Live;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -40,6 +41,8 @@ namespace BassBooster
         private List<IReadOnlyList<Windows.Storage.StorageFile>> Playlist = null; // adding files as 'miniplaylist' every time we add new FileOpenPicker because object that we get as playlist is readonly
         private TrackList Tracklist;
         private DispatcherTimer Timer = new DispatcherTimer() ;//timer for slider
+        public static bool LoggedIn = false;
+        
 
         #endregion
 

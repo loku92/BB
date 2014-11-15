@@ -7,5 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    
+    <Grid Background="#FF2C2C2C">
+        <Button x:Name="LiveLoginButton" VerticalAlignment="Top" Margin="30,30,0,0" Content="Login to OneDrive" Click="LiveLoginButton_Click" />
+        <TextBlock x:Name="StatusBlock" HorizontalAlignment="Left" Margin="300,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Aaa" Style="{StaticResource BodyTextBlockStyle}"/>
+        <Button x:Name="bb" Content="Button" HorizontalAlignment="Left" Margin="72,110,0,0" VerticalAlignment="Top" Click="bb_Click"/>
+    </Grid>
 </Page>
