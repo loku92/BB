@@ -33,21 +33,22 @@ namespace BassBooster
     public sealed partial class MainPage : Page
     {
         #region Vars
-        private bool Empty; // true if there aren't any tracks loaded
-        private bool Shuffle;
-        private int CurrentId;
-        private List<Windows.Storage.StorageFile> Playlist = null;       
-        private TrackList Tracklist;
-        private DispatcherTimer Timer = new DispatcherTimer() ;//timer for slider
+        private bool _Empty; // true if there aren't any tracks loaded
+        private bool _Shuffle;
+        private int _CurrentId;
+        private List<Windows.Storage.StorageFile> _Playlist = null;       
+        private TrackList _Tracklist;
+        private DispatcherTimer _Timer = new DispatcherTimer() ;//timer for slider
         public static bool LoggedIn = false;
         
 
         #endregion
 
+        #region Constructors
         public MainPage()
         {
             this.InitializeComponent();            
-            Tracklist = new TrackList();
+            _Tracklist = new TrackList();
             MP3Player.MediaEnded += MP3Player_MediaEnded;
             MP3Player.MediaOpened += MP3Player_MediaOpened;
             MediaControl.PausePressed += MediaControl_PausePressed;
@@ -56,14 +57,14 @@ namespace BassBooster
             MediaControl.StopPressed += MediaControl_StopPressed;
             MediaControl.NextTrackPressed += MediaControl_NextTrackPressed;
             MediaControl.PreviousTrackPressed += MediaControl_PreviousTrackPressed;
-            Timer.Tick += Tick_Action;
+            _Timer.Tick += Tick_Action;
             MP3Player.Volume = 1.0;
             TrackListBox.ItemsSource = null;
-            Empty = true;
-            Shuffle = false;            
+            _Empty = true;
+            _Shuffle = false;            
         }
+        #endregion
 
-        
         #region Navigation
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -152,7 +153,7 @@ namespace BassBooster
         {
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (!Empty)
+                if (!_Empty)
                     MP3Player.Play();
             });
         }
@@ -170,7 +171,7 @@ namespace BassBooster
         #region MP3PlayerEvents
         private void MP3Player_MediaEnded(object sender, RoutedEventArgs e)
         {
-            Timer.Stop();
+            _Timer.Stop();
             NextButton_Click(null, null);            
         }
 
@@ -178,8 +179,8 @@ namespace BassBooster
         {
             TimeSlider.Value = 0;
             TimeSlider.Maximum = MP3Player.NaturalDuration.TimeSpan.TotalMilliseconds;
-            Timer.Interval = TimeSpan.FromMilliseconds(1);            
-            Timer.Start();
+            _Timer.Interval = TimeSpan.FromMilliseconds(1);            
+            _Timer.Start();
         }
 
         #endregion
@@ -202,7 +203,7 @@ namespace BassBooster
                 PlayButton.Icon = new SymbolIcon(Symbol.Play);
                 
             }
-            else if(!Empty && (MP3Player.CurrentState == MediaElementState.Paused || MP3Player.CurrentState == MediaElementState.Stopped ))
+            else if(!_Empty && (MP3Player.CurrentState == MediaElementState.Paused || MP3Player.CurrentState == MediaElementState.Stopped ))
             {
                 MP3Player.Play();
                 PlayButton.Icon = new SymbolIcon(Symbol.Pause);
@@ -229,8 +230,8 @@ namespace BassBooster
             fop.FileTypeFilter.Add(".aac");
             fop.FileTypeFilter.Add(".asf");
             //if this.plyalist is empty create new list
-            if (Playlist == null)
-                Playlist = new List<Windows.Storage.StorageFile>();
+            if (_Playlist == null)
+                _Playlist = new List<Windows.Storage.StorageFile>();
 
             IReadOnlyList<Windows.Storage.StorageFile> files = await fop.PickMultipleFilesAsync();
             //check if list of selected files isn't empty 
@@ -241,28 +242,28 @@ namespace BassBooster
                 int i = 0;
                 foreach (var f in files)
                 {
-                    Playlist.Add(f);
+                    _Playlist.Add(f);
                     musicProperties = await f.Properties.GetMusicPropertiesAsync();
-                    Tracklist.Add(new Track (Tracklist.Music.Count,musicProperties.Artist,musicProperties.Title,f.Name,musicProperties.Duration));
+                    _Tracklist.Add(new Track (_Tracklist.Music.Count,musicProperties.Artist,musicProperties.Title,f.Name,musicProperties.Duration));
                     i++;
                 }
                 //setting stream       
-                var stream = await Playlist[0].OpenAsync(Windows.Storage.FileAccessMode.Read);
+                var stream = await _Playlist[0].OpenAsync(Windows.Storage.FileAccessMode.Read);
                 if (!wasPlaying)
                 {
-                    MP3Player.SetSource(stream, Playlist[0].ContentType);
+                    MP3Player.SetSource(stream, _Playlist[0].ContentType);
                     //mark currently played file
-                    CurrentId = 0;
-                    int time = Tracklist.GetDurationIntById(CurrentId);
-                    TitleBox.Text = Tracklist.TrackToString(0);
+                    _CurrentId = 0;
+                    int time = _Tracklist.GetDurationIntById(_CurrentId);
+                    TitleBox.Text = _Tracklist.TrackToString(0);
                     UpdateTile(time);
                 }
                 //refresh track listbox
                 TrackListBox.ItemsSource = null;
-                TrackListBox.ItemsSource = Tracklist.Music;
-                Empty = false;
+                TrackListBox.ItemsSource = _Tracklist.Music;
+                _Empty = false;
                 MP3Player.Play();
-                TrackListBox.SelectedIndex = CurrentId;
+                TrackListBox.SelectedIndex = _CurrentId;
                 //set button icon to pause
                 PlayButton.Icon = new SymbolIcon(Symbol.Pause);
 
@@ -277,16 +278,16 @@ namespace BassBooster
         //next
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Empty == false)
+            if (_Empty == false)
             {
                 MP3Player.Stop();
-                if (!Shuffle)
-                    if (CurrentId < (Tracklist.Music.Count - 1))
-                        CurrentId++;
+                if (!_Shuffle)
+                    if (_CurrentId < (_Tracklist.Music.Count - 1))
+                        _CurrentId++;
                     else
-                        CurrentId = 0;
+                        _CurrentId = 0;
                 else
-                    CurrentId = (new Random()).Next(0, (int)Tracklist.Length);
+                    _CurrentId = (new Random()).Next(0, (int)_Tracklist.Length);
                 CommonAction();
             }
 
@@ -296,16 +297,16 @@ namespace BassBooster
         //previous
         private void PrevButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Empty == false)
+            if (_Empty == false)
             {
                 MP3Player.Stop();
-                if (!Shuffle)
-                    if (CurrentId > 0)
-                        CurrentId--;
+                if (!_Shuffle)
+                    if (_CurrentId > 0)
+                        _CurrentId--;
                     else
-                        CurrentId = Tracklist.Music.Count - 1;
+                        _CurrentId = _Tracklist.Music.Count - 1;
                 else
-                    CurrentId = (new Random()).Next(0, (int)Tracklist.Length);
+                    _CurrentId = (new Random()).Next(0, (int)_Tracklist.Length);
                 CommonAction();
             }
         }
@@ -313,15 +314,15 @@ namespace BassBooster
         //clean
         private void ClearListButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!Empty)
+            if (!_Empty)
             {
                 MP3Player.Stop();
-                Tracklist = new TrackList();
-                Empty = true;
+                _Tracklist = new TrackList();
+                _Empty = true;
                 TrackListBox.ItemsSource = null;
-                TrackListBox.ItemsSource = Tracklist.Music;
+                TrackListBox.ItemsSource = _Tracklist.Music;
                 TitleBox.Text = "Artist - Title";
-                Playlist.Clear();
+                _Playlist.Clear();
                 Windows.UI.Notifications.TileUpdateManager.CreateTileUpdaterForApplication().Clear();
 
             }
@@ -330,14 +331,14 @@ namespace BassBooster
         //shuffle on/off
         private void ShuffleButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Shuffle)
+            if (_Shuffle)
             {
-                Shuffle = false;
+                _Shuffle = false;
                 ShuffleButton.Label = "Shuffle is off";
             }
             else
             {
-                Shuffle = true;
+                _Shuffle = true;
                 ShuffleButton.Label = "Shuffle is on";
             }
         }
@@ -348,7 +349,7 @@ namespace BassBooster
         private void TrackListBox_SelectionChanged(object sender, DoubleTappedRoutedEventArgs e)
         {
             MP3Player.Stop();
-            CurrentId = TrackListBox.SelectedIndex;
+            _CurrentId = TrackListBox.SelectedIndex;
             CommonAction();
         }
 
@@ -372,14 +373,13 @@ namespace BassBooster
         //shared action for song change
         private async void CommonAction()
         {
-            int time = Tracklist.GetDurationIntById(CurrentId);
+            int time = _Tracklist.GetDurationIntById(_CurrentId);
             //Timer = new DispatcherTimer();
-            var stream = await Playlist[CurrentId].OpenAsync(Windows.Storage.FileAccessMode.Read);
-            MP3Player.SetSource(stream, Playlist[CurrentId].ContentType);
+            var stream = await _Playlist[_CurrentId].OpenAsync(Windows.Storage.FileAccessMode.Read);
+            MP3Player.SetSource(stream, _Playlist[_CurrentId].ContentType);
             MP3Player.Play();
-            //updating page
-            TrackListBox.SelectedIndex = CurrentId;
-            TitleBox.Text = Tracklist.TrackToString(CurrentId);
+            TrackListBox.SelectedIndex = _CurrentId;
+            TitleBox.Text = _Tracklist.TrackToString(_CurrentId);
             UpdateTile(time);
         }
 
