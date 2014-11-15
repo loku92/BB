@@ -35,10 +35,8 @@ namespace BassBooster
         #region Vars
         private bool Empty; // true if there aren't any tracks loaded
         private bool Shuffle;
-        private int CurrentList;
-        private int CurrentTrack;
         private int CurrentId;
-        private List<IReadOnlyList<Windows.Storage.StorageFile>> Playlist = null; // adding files as 'miniplaylist' every time we add new FileOpenPicker because object that we get as playlist is readonly
+        private List<Windows.Storage.StorageFile> Playlist = null;       
         private TrackList Tracklist;
         private DispatcherTimer Timer = new DispatcherTimer() ;//timer for slider
         public static bool LoggedIn = false;
@@ -232,32 +230,28 @@ namespace BassBooster
             fop.FileTypeFilter.Add(".asf");
             //if this.plyalist is empty create new list
             if (Playlist == null)
-                Playlist = new List<IReadOnlyList<Windows.Storage.StorageFile>>();
+                Playlist = new List<Windows.Storage.StorageFile>();
 
             IReadOnlyList<Windows.Storage.StorageFile> files = await fop.PickMultipleFilesAsync();
             //check if list of selected files isn't empty 
             if (files.Count > 0)
             {
                 //object for music properties
-                MusicProperties musicProperties;
-                //adding 'miniplaylist' to playlist
-                Playlist.Add(files);                
-                int currentPlIndex = Playlist.Count - 1; // getting number of already existing 'miniplaylisy'                
+                MusicProperties musicProperties;               
                 int i = 0;
                 foreach (var f in files)
                 {
+                    Playlist.Add(f);
                     musicProperties = await f.Properties.GetMusicPropertiesAsync();
-                    Tracklist.Add(new Track (i,currentPlIndex,Tracklist.Music.Count,musicProperties.Artist,musicProperties.Title,f.Name,musicProperties.Duration));
+                    Tracklist.Add(new Track (Tracklist.Music.Count,musicProperties.Artist,musicProperties.Title,f.Name,musicProperties.Duration));
                     i++;
                 }
                 //setting stream       
-                var stream = await files[0].OpenAsync(Windows.Storage.FileAccessMode.Read);
+                var stream = await Playlist[0].OpenAsync(Windows.Storage.FileAccessMode.Read);
                 if (!wasPlaying)
                 {
-                    MP3Player.SetSource(stream, Playlist[currentPlIndex][0].ContentType);
+                    MP3Player.SetSource(stream, Playlist[0].ContentType);
                     //mark currently played file
-                    CurrentList = currentPlIndex;
-                    CurrentTrack = 0;
                     CurrentId = 0;
                     int time = Tracklist.GetDurationIntById(CurrentId);
                     TitleBox.Text = Tracklist.TrackToString(0);
@@ -378,14 +372,10 @@ namespace BassBooster
         //shared action for song change
         private async void CommonAction()
         {
-            //gathering file postion on playlsit
-            int[] xx = Tracklist.FindById(CurrentId);
-            CurrentTrack = xx[0];
-            CurrentList = xx[1];
             int time = Tracklist.GetDurationIntById(CurrentId);
             //Timer = new DispatcherTimer();
-            var stream = await Playlist[CurrentList][CurrentTrack].OpenAsync(Windows.Storage.FileAccessMode.Read);
-            MP3Player.SetSource(stream, Playlist[CurrentList][CurrentTrack].ContentType);
+            var stream = await Playlist[CurrentId].OpenAsync(Windows.Storage.FileAccessMode.Read);
+            MP3Player.SetSource(stream, Playlist[CurrentId].ContentType);
             MP3Player.Play();
             //updating page
             TrackListBox.SelectedIndex = CurrentId;
