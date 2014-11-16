@@ -11,6 +11,35 @@ namespace BassBooster.Common
     {
         public static LiveConnectClient _client = null;
 
+        public async static Task<int> SignInOneDrive(){
+            if (OneDriveManager._client == null)
+            {
+                bool connected = false;
+                try
+                {
+                    var authClient = new LiveAuthClient();
+                    LiveLoginResult result = await authClient.LoginAsync(new string[] { "wl.signin", "wl.skydrive", "wl.skydrive_update" });
+
+                    if (result.Status == LiveConnectSessionStatus.Connected)
+                    {
+                        connected = true;
+                        OneDriveManager._client = new LiveConnectClient(result.Session);
+                        var meResult = await OneDriveManager._client.GetAsync("me");
+                        dynamic meData = meResult.Result;
+                    }
+                }
+                catch (LiveAuthException ex)
+                {
+                    return -1;
+                }
+                catch (LiveConnectException ex)
+                {
+                    return -1;
+                }                
+            }
+            return 0;
+        }
+
         public async static Task<string> CreateDirectoryAsync()
         {
             string folderId = null;

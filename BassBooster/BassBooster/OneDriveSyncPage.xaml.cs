@@ -40,39 +40,23 @@ namespace BassBooster
 
         private async void LiveLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            if (OneDriveManager._client == null)
+            var result = await OneDriveManager.SignInOneDrive();
+            if (result.ToString() == "0")
             {
-                bool connected = false;
-                try
-                {
-                    var authClient = new LiveAuthClient();
-                    LiveLoginResult result = await authClient.LoginAsync(new string[] { "wl.signin", "wl.skydrive", "wl.skydrive_update" });
-
-                    if (result.Status == LiveConnectSessionStatus.Connected)
-                    {
-                        connected = true;
-                        OneDriveManager._client = new LiveConnectClient(result.Session);
-                        var meResult = await OneDriveManager._client.GetAsync("me");
-                        dynamic meData = meResult.Result;
-                    }
-                }
-                catch (LiveAuthException ex)
-                {
-                    LiveLoginButton.Content = "Retry";
-                }
-                catch (LiveConnectException ex)
-                {
-                    LiveLoginButton.Content = "Retry";
-                }                
+                LiveLoginButton.Content = "Log out";
+                bb.Visibility = Visibility.Visible;
             }
-            LiveLoginButton.Content = "Log out";
-            bb.Visibility = Visibility.Visible;
+            else
+            {
+                LiveLoginButton.Content = "Retry";
+            }
+            
         }
         
 
         private async void bb_Click(object sender, RoutedEventArgs e)
         {
-            OneDriveManager.CreateDirectoryAsync();
+            await OneDriveManager.CreateDirectoryAsync();
         }
 
     }
