@@ -14,10 +14,10 @@ namespace BassBooster.Models
         public string FileName { get; set; }
         public int Duration { get; set; }
 
-        public Track(int displayId, string artist, string title, string fName, TimeSpan length)
+        public Track(int Id, string artist, string title, string fName, TimeSpan length)
         {
 
-            this.Id = displayId;
+            this.Id = Id;
             this.Artist = artist;
             this.Title = title;
             this.FileName = fName;

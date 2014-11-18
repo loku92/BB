@@ -36,10 +36,14 @@ namespace BassBooster
         private bool _Empty; // true if there aren't any tracks loaded
         private bool _Shuffle;
         private int _CurrentId;
-        private List<Windows.Storage.StorageFile> _Playlist = null;       
+        private List<Windows.Storage.StorageFile> _Playlist = null;
+        private List<int> _ShufflePlaylist;
+        private int _ShuffleId;
         private TrackList _Tracklist;
         private DispatcherTimer _Timer = new DispatcherTimer() ;//timer for slider
+        private Repeat _Repeat;
         public static bool LoggedIn = false;
+        
         
 
         #endregion
@@ -58,6 +62,8 @@ namespace BassBooster
             MediaControl.NextTrackPressed += MediaControl_NextTrackPressed;
             MediaControl.PreviousTrackPressed += MediaControl_PreviousTrackPressed;
             _Timer.Tick += Tick_Action;
+            _Repeat = Repeat.ALL;
+            _ShufflePlaylist = new List<int>();
             MP3Player.Volume = 1.0;
             TrackListBox.ItemsSource = null;
             _Empty = true;
@@ -258,6 +264,10 @@ namespace BassBooster
                     TitleBox.Text = _Tracklist.TrackToString(0);
                     UpdateTile(time);
                 }
+                if (_Shuffle)
+                {
+                    Shuffle();
+                }
                 //refresh track listbox
                 TrackListBox.ItemsSource = null;
                 TrackListBox.ItemsSource = _Tracklist.Music;
@@ -287,7 +297,12 @@ namespace BassBooster
                     else
                         _CurrentId = 0;
                 else
-                    _CurrentId = (new Random()).Next(0, (int)_Tracklist.Length);
+                {
+                    _ShuffleId++;
+                    if (_ShuffleId >= _Playlist.Count)
+                        _ShuffleId = 0;
+                    _CurrentId = _ShufflePlaylist[_ShuffleId];
+                }
                 CommonAction();
             }
 
@@ -306,7 +321,12 @@ namespace BassBooster
                     else
                         _CurrentId = _Tracklist.Music.Count - 1;
                 else
-                    _CurrentId = (new Random()).Next(0, (int)_Tracklist.Length);
+                {
+                    _ShuffleId--;
+                    if (_ShuffleId < 0)
+                        _ShuffleId = _Playlist.Count - 1;
+                    _CurrentId = _ShufflePlaylist[_ShuffleId];
+                }
                 CommonAction();
             }
         }
@@ -338,8 +358,18 @@ namespace BassBooster
             }
             else
             {
+                
                 _Shuffle = true;
                 ShuffleButton.Label = "Shuffle is on";
+                Shuffle();
+                if (MP3Player.CurrentState == MediaElementState.Playing)
+                {
+                    _ShuffleId = _ShufflePlaylist.IndexOf(_CurrentId);                                 
+                }
+                else
+                {
+                    _ShuffleId = 0;
+                }
             }
         }
         
@@ -423,10 +453,24 @@ namespace BassBooster
                 return (minute + " : " + seconds);
         }
 
+        public void Shuffle()
+        {
+            _ShufflePlaylist = new List<int>();
+            int i = 0;
+            
+            foreach (var xdas in _Playlist){
+                _ShufflePlaylist.Add(i++);
+            }
+
+            Random rnd = new Random();
+            _ShufflePlaylist = (from t in _ShufflePlaylist
+                                select t).OrderBy(item => rnd.Next()).ToList();
+        }
+
         #endregion
     }
     enum Repeat
     {
-        NONE, ALL, ONE
+        ALL, ONE
     }
 }
