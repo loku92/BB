@@ -149,9 +149,6 @@ namespace BassBooster
             text = text.Replace("ś", "s");
             text = text.Replace("ć", "c");
             text = text.Replace("ń", "n");
-        }
-
-        
-                    
+        }           
     }
 }

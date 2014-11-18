@@ -50,7 +50,6 @@ namespace BassBooster
             {
                 LiveLoginButton.Content = "Retry";
             }
-            
         }
         
 

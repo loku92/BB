@@ -108,6 +108,7 @@
     </Compile>
     <Compile Include="Common\OneDriveManager.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="Common\TileManager.cs" />
     <Compile Include="Converters\NumberConverter.cs" />
     <Compile Include="Converters\TabConverter.cs" />
     <Compile Include="Converters\TrackConverter.cs" />

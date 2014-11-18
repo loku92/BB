@@ -387,13 +387,13 @@ namespace BassBooster
             {
                 _Repeat = Repeat.ONE;
                 RepeatButton.Icon = new SymbolIcon(Symbol.RepeatOne);
-                PlayButton.Label = "Repeat One";
+                RepeatButton.Label = "Repeat One";
             }
             else
             {
                 _Repeat = Repeat.ALL;
                 RepeatButton.Icon = new SymbolIcon(Symbol.RepeatAll);
-                PlayButton.Label = "Repeat All";
+                RepeatButton.Label = "Repeat All";
             }
         }
         
@@ -441,12 +441,8 @@ namespace BassBooster
         //Updating tile
         private void UpdateTile(int sec)
         {
-            XmlDocument tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileWide310x150Text04);
-            XmlNodeList tileTextAttributes = tileXml.GetElementsByTagName("text");
-            tileTextAttributes[0].InnerText = TitleBox.Text;
-            TileNotification tileNotification = new TileNotification(tileXml);
-            tileNotification.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(sec);
-            TileUpdateManager.CreateTileUpdaterForApplication().Update(tileNotification);
+            TileManager.UpdateWideTile(TitleBox.Text, sec);
+            TileManager.UpdateSquareTile(TitleBox.Text, sec);
         }
         #endregion
 
@@ -471,7 +467,7 @@ namespace BassBooster
         {
             int minute = (int)(milliseconds / (1000 * 60));
             int seconds = (int)((milliseconds /  1000) % 60 );
-            if (seconds <10 )
+            if (seconds < 10 )
                 return (minute + " : 0" + seconds);
             else
                 return (minute + " : " + seconds);
