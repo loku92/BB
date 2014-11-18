@@ -54,7 +54,7 @@
             <Slider x:Name="VolumeSlider" Grid.Column="0" Grid.Row="1" LargeChange="9" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="330,0,0,0" Orientation="Vertical" Height="75" Value="100" ValueChanged="VolumeSlider_ValueChanged"/>
 
             <AppBarButton x:Name="ShuffleButton"  Icon="Shuffle" Label="Shuffle"   VerticalAlignment="Center" HorizontalAlignment="Left"  Grid.Row="1" Margin="430,0,0,0" Click="ShuffleButton_Click"/>
-            <AppBarButton x:Name="RepeatButton" Icon="RepeatAll" Label="Repear All"   Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="530,0,0,0"/>
+            <AppBarButton x:Name="RepeatButton" Icon="RepeatAll" Label="Repeat All"   Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="530,0,0,0" Click="RepeatButton_Click"/>
             <AppBarButton x:Name="FileOpenButton" Icon="OpenFile" Label="Add Music"  Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="630,0,0,0" Click="FileOpenButton_Click"/>
             <AppBarButton x:Name="ClearListButton" Icon="Clear" Label="Clean list"  Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="730,0,0,0" RequestedTheme="Dark" Click="ClearListButton_Click"/>
         </Grid>

@@ -288,23 +288,28 @@ namespace BassBooster
         //next
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_Empty == false)
+            if (_Repeat == Repeat.ALL)
             {
-                MP3Player.Stop();
-                if (!_Shuffle)
-                    if (_CurrentId < (_Tracklist.Music.Count - 1))
-                        _CurrentId++;
-                    else
-                        _CurrentId = 0;
-                else
+                if (_Empty == false)
                 {
-                    _ShuffleId++;
-                    if (_ShuffleId >= _Playlist.Count)
-                        _ShuffleId = 0;
-                    _CurrentId = _ShufflePlaylist[_ShuffleId];
+                    MP3Player.Stop();
+                    if (!_Shuffle)
+                        if (_CurrentId < (_Tracklist.Music.Count - 1))
+                            _CurrentId++;
+                        else
+                            _CurrentId = 0;
+                    else
+                    {
+                        _ShuffleId++;
+                        if (_ShuffleId >= _Playlist.Count)
+                            _ShuffleId = 0;
+                        _CurrentId = _ShufflePlaylist[_ShuffleId];
+                    }
+                    CommonAction();
                 }
-                CommonAction();
             }
+            else
+                CommonAction();
 
         }
 
@@ -314,18 +319,21 @@ namespace BassBooster
         {
             if (_Empty == false)
             {
-                MP3Player.Stop();
-                if (!_Shuffle)
-                    if (_CurrentId > 0)
-                        _CurrentId--;
-                    else
-                        _CurrentId = _Tracklist.Music.Count - 1;
-                else
+                if (_Repeat == Repeat.ALL)
                 {
-                    _ShuffleId--;
-                    if (_ShuffleId < 0)
-                        _ShuffleId = _Playlist.Count - 1;
-                    _CurrentId = _ShufflePlaylist[_ShuffleId];
+                    MP3Player.Stop();
+                    if (!_Shuffle)
+                        if (_CurrentId > 0)
+                            _CurrentId--;
+                        else
+                            _CurrentId = _Tracklist.Music.Count - 1;
+                    else
+                    {
+                        _ShuffleId--;
+                        if (_ShuffleId < 0)
+                            _ShuffleId = _Playlist.Count - 1;
+                        _CurrentId = _ShufflePlaylist[_ShuffleId];
+                    }
                 }
                 CommonAction();
             }
@@ -370,6 +378,22 @@ namespace BassBooster
                 {
                     _ShuffleId = 0;
                 }
+            }
+        }
+
+        private void RepeatButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_Repeat == Repeat.ALL)
+            {
+                _Repeat = Repeat.ONE;
+                RepeatButton.Icon = new SymbolIcon(Symbol.RepeatOne);
+                PlayButton.Label = "Repeat One";
+            }
+            else
+            {
+                _Repeat = Repeat.ALL;
+                RepeatButton.Icon = new SymbolIcon(Symbol.RepeatAll);
+                PlayButton.Label = "Repeat All";
             }
         }
         
@@ -458,7 +482,7 @@ namespace BassBooster
             _ShufflePlaylist = new List<int>();
             int i = 0;
             
-            foreach (var xdas in _Playlist){
+            foreach (var song in _Playlist){
                 _ShufflePlaylist.Add(i++);
             }
 
@@ -468,6 +492,7 @@ namespace BassBooster
         }
 
         #endregion
+
     }
     enum Repeat
     {
