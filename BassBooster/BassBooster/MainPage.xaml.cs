@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Notifications;
 using Windows.Data.Xml.Dom;
 using Microsoft.Live;
+using Windows.UI.Popups;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -509,6 +510,12 @@ namespace BassBooster
             }
         }
 
+        private async void AuthorAppButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageDialog dlg = new MessageDialog("Author: Daniel Pawłowski \nE-mail: pawlowsd@ee.pw.edu.pl \nVersion: 1.0", "About");
+            await dlg.ShowAsync();
+        }
+
         public void Shuffle()
         {
             _ShufflePlaylist = new List<int>();
@@ -524,6 +531,8 @@ namespace BassBooster
         }
 
         #endregion
+
+        
 
         
 

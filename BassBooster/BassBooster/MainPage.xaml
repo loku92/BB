@@ -98,7 +98,7 @@
     </Grid>
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton x:Name="AuthorAppButton" Label="Author" Icon="Contact"/>
+            <AppBarButton x:Name="AuthorAppButton" Label="Author" Icon="Contact" Click="AuthorAppButton_Click"/>
             <CommandBar.SecondaryCommands>
                 <AppBarToggleButton x:Name="NotifAppButton" Label="Toast off" Icon="Message" Click="NotifAppButton_Clicked"/>
                 <AppBarToggleButton x:Name="TileAppButton" Label="Dynamic tile on" Icon="SetTile" Click="TileAppButton_Clicked" IsChecked="True"/>
