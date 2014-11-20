@@ -77,7 +77,7 @@
         </Grid>
         <Frame x:Name="TabFrame" Grid.Column="1" Grid.Row="1" Background="#FFE4E2E2"/>
         <ListBox x:Name="TrackListBox" SelectionMode="Single"  HorizontalAlignment="Left"  Grid.Column="1" Grid.Row="1"  BorderThickness="0" Style="{StaticResource TabStyleListBox}"
-                 VerticalAlignment="Top" Margin="0" DoubleTapped="TrackListBox_SelectionChanged">
+                 VerticalAlignment="Top" Margin="0" DoubleTapped="TrackListBox_SelectionChanged" ManipulationMode="All">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -95,4 +95,17 @@
 
 
     </Grid>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Label="Refresh" Icon="Refresh" />
+            <AppBarButton Label="Help" Icon="Help"/>
+
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Edit" Icon="Edit" />
+                <AppBarButton Label="Remove" Icon="Remove" />
+                <AppBarButton Label="Add" Icon="Add" />
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
 </Page>

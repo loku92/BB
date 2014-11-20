@@ -49,5 +49,17 @@ namespace BassBooster.Common
             tileNotification.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(sec);
             TileUpdateManager.CreateTileUpdaterForApplication().Update(tileNotification);
         }
+
+        public static void UpdateTile(string title, int sec)
+        {
+            TileManager.UpdateWideTile(title, sec);
+            TileManager.UpdateSquareTile(title, sec);
+        }
+
+        public static void ClearTile()
+        {
+            Windows.UI.Notifications.TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+        }
+    
     }
 }

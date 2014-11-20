@@ -262,7 +262,7 @@ namespace BassBooster
                     _CurrentId = 0;
                     int time = _Tracklist.GetDurationIntById(_CurrentId);
                     TitleBox.Text = _Tracklist.TrackToString(0);
-                    UpdateTile(time);
+                    TileManager.UpdateTile(TitleBox.Text,time);
                 }
                 if (_Shuffle)
                 {
@@ -351,7 +351,7 @@ namespace BassBooster
                 TrackListBox.ItemsSource = _Tracklist.Music;
                 TitleBox.Text = "Artist - Title";
                 _Playlist.Clear();
-                Windows.UI.Notifications.TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+                TileManager.ClearTile();
 
             }
         }
@@ -434,16 +434,12 @@ namespace BassBooster
             MP3Player.Play();
             TrackListBox.SelectedIndex = _CurrentId;
             TitleBox.Text = _Tracklist.TrackToString(_CurrentId);
-            UpdateTile(time);
+            TileManager.UpdateTile(TitleBox.Text,time);
         }
 
 
         //Updating tile
-        private void UpdateTile(int sec)
-        {
-            TileManager.UpdateWideTile(TitleBox.Text, sec);
-            TileManager.UpdateSquareTile(TitleBox.Text, sec);
-        }
+        
         #endregion
 
 
