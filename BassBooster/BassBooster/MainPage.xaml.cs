@@ -263,6 +263,7 @@ namespace BassBooster
                     int time = _Tracklist.GetDurationIntById(_CurrentId);
                     TitleBox.Text = _Tracklist.TrackToString(0);
                     TileManager.UpdateTile(TitleBox.Text,time);
+                    ToastManager.ShowToast(TitleBox.Text);
                 }
                 if (_Shuffle)
                 {
@@ -352,8 +353,10 @@ namespace BassBooster
                 TitleBox.Text = "Artist - Title";
                 _Playlist.Clear();
                 TileManager.ClearTile();
-
             }
+
+            
+
         }
 
         //shuffle on/off
@@ -435,6 +438,7 @@ namespace BassBooster
             TrackListBox.SelectedIndex = _CurrentId;
             TitleBox.Text = _Tracklist.TrackToString(_CurrentId);
             TileManager.UpdateTile(TitleBox.Text,time);
+            ToastManager.ShowToast(TitleBox.Text);
         }
 
 
@@ -469,6 +473,42 @@ namespace BassBooster
                 return (minute + " : " + seconds);
         }
 
+        private void NotifAppButton_Clicked(object sender, RoutedEventArgs e)
+        {
+
+            if (ToastManager.isEnabled)
+            {
+                ToastManager.isEnabled = false;
+                NotifAppButton.Label = "Toast Off";
+            }
+            else
+            {
+                ToastManager.isEnabled = true;
+                NotifAppButton.Label = "Toast On";
+            }
+        }
+
+        private void TileAppButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (TileManager.isEnabled)
+                {
+                    TileAppButton.Label = "Dynamic tile off";
+                    TileManager.isEnabled = false;                    
+                }
+                else
+                {
+                    TileManager.isEnabled = true;
+                    TileAppButton.Label = "Dynamic tile on";
+                }
+            }
+            catch (NullReferenceException exc)
+            {
+                TileManager.isEnabled = true;
+            }
+        }
+
         public void Shuffle()
         {
             _ShufflePlaylist = new List<int>();
@@ -484,6 +524,10 @@ namespace BassBooster
         }
 
         #endregion
+
+        
+
+        
 
     }
     enum Repeat

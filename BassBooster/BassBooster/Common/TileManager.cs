@@ -10,6 +10,17 @@ namespace BassBooster.Common
 {
     public class TileManager
     {
+        public static bool isEnabled = true;
+
+
+        public static void UpdateTile(string title, int sec)
+        {
+            if ( TileManager.isEnabled )
+            {
+                TileManager.UpdateWideTile(title, sec);
+                TileManager.UpdateSquareTile(title, sec);
+            }
+        }
         public static void UpdateWideTile(string title, int sec)
         {
             XmlDocument tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileWide310x150Text04);
@@ -50,15 +61,13 @@ namespace BassBooster.Common
             TileUpdateManager.CreateTileUpdaterForApplication().Update(tileNotification);
         }
 
-        public static void UpdateTile(string title, int sec)
-        {
-            TileManager.UpdateWideTile(title, sec);
-            TileManager.UpdateSquareTile(title, sec);
-        }
 
         public static void ClearTile()
         {
-            Windows.UI.Notifications.TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+            if (isEnabled)
+            {
+                Windows.UI.Notifications.TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+            }
         }
     
     }

@@ -31,6 +31,7 @@
             <MediaElement x:Name="MP3Player" Visibility="Collapsed" AudioCategory="BackgroundCapableMedia" Grid.Row="0"/>
         </Grid>
         <!-- -->
+        
         <Grid x:Name="ControlGrid" Grid.Column="1" Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="5*"/>
@@ -97,13 +98,10 @@
     </Grid>
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton Label="Refresh" Icon="Refresh" />
-            <AppBarButton Label="Help" Icon="Help"/>
-
+            <AppBarButton x:Name="AuthorAppButton" Label="Author" Icon="Contact"/>
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Edit" Icon="Edit" />
-                <AppBarButton Label="Remove" Icon="Remove" />
-                <AppBarButton Label="Add" Icon="Add" />
+                <AppBarToggleButton x:Name="NotifAppButton" Label="Toast off" Icon="Message" Click="NotifAppButton_Clicked"/>
+                <AppBarToggleButton x:Name="TileAppButton" Label="Dynamic tile on" Icon="SetTile" Click="TileAppButton_Clicked" IsChecked="True"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
