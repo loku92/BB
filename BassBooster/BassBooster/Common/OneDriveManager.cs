@@ -10,6 +10,7 @@ namespace BassBooster.Common
     public class OneDriveManager
     {
         public static LiveConnectClient _client = null;
+        public static string _folderId;
 
         public async static Task<int> SignInOneDrive(){
             if (OneDriveManager._client == null)
@@ -72,8 +73,17 @@ namespace BassBooster.Common
                     return null;
                 }
             }
-
+            OneDriveManager._folderId = folderId;
             return folderId;
+        }
+
+        public static async Task DeleteFolder(string folderId)
+        {
+            if (_client != null)
+            {
+                LiveOperationResult operationResult = await _client.DeleteAsync(folderId);
+            }
+
         }
 
         //public async static Task<string> DownloadFileAsync(LiveConnectClient client, string directory, string fileName)

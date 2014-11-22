@@ -11,5 +11,6 @@
         <Button x:Name="LiveLoginButton" VerticalAlignment="Top" Margin="30,30,0,0" Content="Login to OneDrive" Click="LiveLoginButton_Click" />
         <TextBlock x:Name="StatusBlock" HorizontalAlignment="Left" Margin="300,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Aaa" Style="{StaticResource BodyTextBlockStyle}"/>
         <Button x:Name="bb" Content="Button" HorizontalAlignment="Left" Margin="72,110,0,0" VerticalAlignment="Top" Click="bb_Click"/>
+        <Button Content="Delete" HorizontalAlignment="Left" Margin="245,133,0,0" VerticalAlignment="Top" Click="Button_Click"/>
     </Grid>
 </Page>

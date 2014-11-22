@@ -58,5 +58,17 @@ namespace BassBooster
             await OneDriveManager.CreateDirectoryAsync();
         }
 
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await OneDriveManager.DeleteFolder(OneDriveManager._folderId);
+            }
+            catch (LiveConnectException exception)
+            {
+                    
+            }
+        }
+
     }
 }

@@ -24,12 +24,12 @@ using Windows.UI.Popups;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-//TODO:  repeat
 
 namespace BassBooster
 {
     /// <summary>
-    /// MediaElement doesn't support FLAC
+    /// Contains MP3 Player Code
+    /// MediaElement doesn't support FLAC.
     /// </summary>
     public sealed partial class MainPage : Page
     {
@@ -43,7 +43,6 @@ namespace BassBooster
         private TrackList _Tracklist;
         private DispatcherTimer _Timer = new DispatcherTimer() ;//timer for slider
         private Repeat _Repeat;
-        public static bool LoggedIn = false;
         
         
 
@@ -64,15 +63,19 @@ namespace BassBooster
             MediaControl.PreviousTrackPressed += MediaControl_PreviousTrackPressed;
             _Timer.Tick += Tick_Action;
             _Repeat = Repeat.ALL;
-            _ShufflePlaylist = new List<int>();
-            MP3Player.Volume = 1.0;
-            TrackListBox.ItemsSource = null;
+            _ShufflePlaylist = new List<int>();            
             _Empty = true;
             _Shuffle = false;            
+            MP3Player.Volume = 1.0;
+            TrackListBox.ItemsSource = null;
         }
         #endregion
 
         #region Navigation
+
+        /// <summary>
+        /// OnNavigate  - tab changing code
+        /// </summary>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             //setting current tab as selected
@@ -89,6 +92,10 @@ namespace BassBooster
                 NavTab.SelectedIndex = 0;
             }
         }
+
+        /// <summary>
+        /// NavTav_SelectionChanged - when we click on tab what tab to be displayed
+        /// </summary>
 
         private void NavTab_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {                   
@@ -110,9 +117,19 @@ namespace BassBooster
 
         #region PlayerManagement
 
+
+        /// <summary>
+        /// MediaContol
+        ///     For controling MP3 Player
+        /// </summary>
         #region MediaControl
-        //using dispatcher to get access to thread that runs player
-        //next track pressed
+
+
+        /// <summary>
+        /// MediaControl_NextTrackPressed
+        ///     When app is minimalized and next button is pressed
+        /// </summary>
+        
         private async void MediaControl_NextTrackPressed(object sender, object e)
         {
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -120,16 +137,24 @@ namespace BassBooster
                 NextButton_Click(null, null);
             });
         }
-        //previous track pressed
+
+
+        /// <summary>
+        /// MediaControl_PreviousTrackPressed
+        ///     When app is minimalized and prev button is pressed
+        /// </summary>
         private async void MediaControl_PreviousTrackPressed(object sender, object e)
         {
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 PrevButton_Click(null, null);
             });
-        }   
+        }
 
-        //stopped pressed
+        /// <summary>
+        /// MediaControl_StopPressed
+        ///     When app is minimalized and stop button is pressed
+        /// </summary>
         private async void MediaControl_StopPressed(object sender, object e)
         {
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -175,13 +200,25 @@ namespace BassBooster
         }
         #endregion
 
+        
+
         #region MP3PlayerEvents
+
+        /// <summary>
+        /// MP3Player_MediaEnded
+        ///     What to do when we track has finished
+        /// </summary>
         private void MP3Player_MediaEnded(object sender, RoutedEventArgs e)
         {
             _Timer.Stop();
             NextButton_Click(null, null);            
         }
 
+
+        /// <summary>
+        /// MP3Player_MediaOpened
+        ///     What to do when we have loaded song successfully
+        /// </summary>
         private void MP3Player_MediaOpened(object sender, RoutedEventArgs e)
         {
             TimeSlider.Value = 0;
@@ -195,7 +232,10 @@ namespace BassBooster
         #region ButtonAction
 
 
-        //volume change
+        /// <summary>
+        /// VolumeSlider_ValueChanged
+        ///     Volume slider code
+        /// </summary>
         private void VolumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             if (MP3Player != null)
@@ -217,7 +257,10 @@ namespace BassBooster
             }
         }
 
-        //open files
+        /// <summary>
+        /// FileOpenButton_Click
+        ///     Opens FileOpenPicker to load tracks
+        /// </summary>
         private async void FileOpenButton_Click(object sender, RoutedEventArgs e)
         {
             bool wasPlaying;
@@ -341,7 +384,10 @@ namespace BassBooster
             }
         }
 
-        //clean
+        /// <summary>
+        /// ClearListButton_Click
+        ///     To clear playlist
+        /// </summary>
         private void ClearListButton_Click(object sender, RoutedEventArgs e)
         {
             if (!_Empty)
@@ -355,12 +401,12 @@ namespace BassBooster
                 _Playlist.Clear();
                 TileManager.ClearTile();
             }
-
-            
-
         }
 
-        //shuffle on/off
+        /// <summary>
+        /// ShuffleButton_Click
+        ///     Turn on/off playlist shuffle
+        /// </summary>
         private void ShuffleButton_Click(object sender, RoutedEventArgs e)
         {
             if (_Shuffle)
@@ -385,6 +431,11 @@ namespace BassBooster
             }
         }
 
+
+        /// <summary>
+        /// RepeatButton_Click
+        ///     Switch repeat whole tracklist or just 1 song
+        /// </summary>
         private void RepeatButton_Click(object sender, RoutedEventArgs e)
         {
             if (_Repeat == Repeat.ALL)
@@ -400,10 +451,11 @@ namespace BassBooster
                 RepeatButton.Label = "Repeat All";
             }
         }
-        
 
-          
-        // tracklist selection f        
+        /// <summary>
+        /// TrackListBox_SelectionChanged
+        ///     Executed when we double click on playlist track
+        /// </summary>     
         private void TrackListBox_SelectionChanged(object sender, DoubleTappedRoutedEventArgs e)
         {
             MP3Player.Stop();
@@ -411,7 +463,10 @@ namespace BassBooster
             CommonAction();
         }
 
-        //slider change
+        /// <summary>
+        /// TimeSlider_ValueChanged
+        ///     Executed when we change position of time slider to navigate a song to right place
+        /// </summary> 
         private void TimeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             TimeSpan ts = new TimeSpan(0, 0, 0, 0, (int)TimeSlider.Value);
@@ -419,8 +474,18 @@ namespace BassBooster
         }
         #endregion
 
+
+        /// <summary>
+        /// Shared action
+        ///     Repeated or some other code in one place
+        /// </summary> 
         #region SharedOtherAction
-        //action per timer tick 
+
+
+        /// <summary>
+        /// Tick_Action
+        ///     Tick on timer to move TimeSlider
+        /// </summary> 
         private void Tick_Action(object sender, object e)
         {
             TimeBox.Text = MillisecondsToMinute((long)MP3Player.Position.TotalMilliseconds);
@@ -428,7 +493,10 @@ namespace BassBooster
         }
 
 
-        //shared action for song change
+        /// <summary>
+        /// CommonAction
+        ///     Called when song is changed, updates UI and starts playing.
+        /// </summary>
         private async void CommonAction()
         {
             int time = _Tracklist.GetDurationIntById(_CurrentId);
@@ -452,7 +520,9 @@ namespace BassBooster
 
         #region Tabs
 
-
+        /// <summary>
+        /// List of tabs (frames) to be displayed in list (on the left side of UI)
+        /// </summary>
         public List<Tab> TabList = new List<Tab>
         {
             new Tab() { Name = "   ⏯  Playlist", ClassType = typeof(ListPage) },
@@ -464,6 +534,11 @@ namespace BassBooster
         #endregion
 
         #region Others
+
+        /// <summary>
+        /// MillisecondsToMinute
+        ///     COnverts time of song from miliseconds to displayable string minutes:seconds
+        /// </summary>
         public string MillisecondsToMinute(long milliseconds)
         {
             int minute = (int)(milliseconds / (1000 * 60));
@@ -474,6 +549,10 @@ namespace BassBooster
                 return (minute + " : " + seconds);
         }
 
+        /// <summary>
+        /// NotifAppButton_Clicked
+        ///     Turn on/off toasts
+        /// </summary>
         private void NotifAppButton_Clicked(object sender, RoutedEventArgs e)
         {
 
@@ -489,6 +568,10 @@ namespace BassBooster
             }
         }
 
+        /// <summary>
+        /// TileAppButton_Clicked
+        ///     Turn on/off dynamic tile
+        /// </summary>
         private void TileAppButton_Clicked(object sender, RoutedEventArgs e)
         {
             try
@@ -516,6 +599,10 @@ namespace BassBooster
             await dlg.ShowAsync();
         }
 
+        /// <summary>
+        /// Shuffle
+        ///     Shuffle our playlist.
+        /// </summary>
         public void Shuffle()
         {
             _ShufflePlaylist = new List<int>();
@@ -532,13 +619,14 @@ namespace BassBooster
 
         #endregion
 
-        
-
-        
-
-        
 
     }
+
+    /// <summary>
+    /// Repeat
+    ///     ONE - just one track
+    ///     ALL - whole playlist
+    /// </summary>
     enum Repeat
     {
         ALL, ONE
