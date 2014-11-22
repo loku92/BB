@@ -70,5 +70,23 @@ namespace BassBooster
             }
         }
 
+        private async void Upload_Click(object sender, RoutedEventArgs e)
+        {
+            await OneDriveManager.UploadFiles();
+        }
+
+        private void CancelUpload_Click(object sender, RoutedEventArgs e)
+        {
+            if (OneDriveManager._cancelUpload != null)
+            {
+                OneDriveManager._cancelUpload.Cancel();
+            }
+        }
+        
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            await OneDriveManager.DownloadFiles();
+        }
+
     }
 }

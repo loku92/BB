@@ -12,5 +12,8 @@
         <TextBlock x:Name="StatusBlock" HorizontalAlignment="Left" Margin="300,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Aaa" Style="{StaticResource BodyTextBlockStyle}"/>
         <Button x:Name="bb" Content="Button" HorizontalAlignment="Left" Margin="72,110,0,0" VerticalAlignment="Top" Click="bb_Click"/>
         <Button Content="Delete" HorizontalAlignment="Left" Margin="245,133,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <Button x:Name="Upload" Content="Upload" HorizontalAlignment="Left" Margin="423,113,0,0" VerticalAlignment="Top" Click="Upload_Click"/>
+        <Button x:Name="CancelUpload" Content="Cancel" HorizontalAlignment="Left" Margin="574,79,0,0" VerticalAlignment="Top" Click="CancelUpload_Click"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="881,184,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
     </Grid>
 </Page>
