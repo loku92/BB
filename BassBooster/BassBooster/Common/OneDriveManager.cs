@@ -16,10 +16,10 @@ namespace BassBooster.Common
         private const string FOLDER_NAME = "BBLyrics";
         public const string EXTENSION = ".bbf";
 
-        public async static Task<int> SignInOneDrive(){
+        public async static Task<int> SignInOneDriveAsync()
+        {
             if (OneDriveManager._client == null)
             {
-                bool connected = false;
                 try
                 {
                     var authClient = new LiveAuthClient();
@@ -27,7 +27,6 @@ namespace BassBooster.Common
 
                     if (result.Status == LiveConnectSessionStatus.Connected)
                     {
-                        connected = true;
                         OneDriveManager._client = new LiveConnectClient(result.Session);
                         var meResult = await OneDriveManager._client.GetAsync("me");
                         dynamic meData = meResult.Result;
@@ -40,7 +39,7 @@ namespace BassBooster.Common
                 catch (LiveConnectException ex)
                 {
                     return -1;
-                }                
+                }
             }
             return 0;
         }
@@ -82,71 +81,55 @@ namespace BassBooster.Common
             return folderId;
         }
 
-        public static async Task DownloadFiles()
+        public static async Task DownloadFilesAsync()
         {
-            CheckIfExists();
+            await CheckIfExists();
             StorageFolder folder = Windows.Storage.KnownFolders.MusicLibrary;
             StorageFile newFile;
-            List<string> fileNames= new List<string>();
-            try
+            List<string> fileNames = new List<string>();
+            string query = _folderId + "/files";
+            LiveOperationResult operationResult = await _client.GetAsync(query);
+            dynamic result = operationResult.Result;
+            foreach (dynamic file in result.data)
             {
-                CheckIfExists();
-                string query = _folderId + "/files";
-                LiveOperationResult operationResult =  await _client.GetAsync(query);
-                dynamic result = operationResult.Result;
-                foreach (dynamic file in result.data)
-                {             
-                    fileNames.Add( file.name ); //lame hack no to get runtimebinder exception caused by no getawaiter in object
-                    newFile = await folder.CreateFileAsync(fileNames[fileNames.Count-1], CreationCollisionOption.ReplaceExisting);
-                    await _client.BackgroundDownloadAsync(file.id+"/Content",newFile);                    
-                }
-
+                fileNames.Add(file.name); //lame hack not to get runtimebinder exception caused by no getawaiter in object
+                newFile = await folder.CreateFileAsync(fileNames[fileNames.Count - 1], CreationCollisionOption.ReplaceExisting);
+                await _client.BackgroundDownloadAsync(file.id + "/Content", newFile);
             }
-            catch (LiveConnectException exception)
-            {
-            }        
         }
 
-        public static async Task UploadFiles()
+        public static async Task UploadFilesAsync()
         {
-            try
+            await CheckIfExists();
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
+            picker.FileTypeFilter.Add(".bbf");
+            IReadOnlyList<Windows.Storage.StorageFile> files = await picker.PickMultipleFilesAsync();
+            if (files.Count > 0)
             {
-                CheckIfExists();
-                var picker = new Windows.Storage.Pickers.FileOpenPicker();
-                picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
-                picker.FileTypeFilter.Add(".bbf");
-                IReadOnlyList<Windows.Storage.StorageFile> files = await picker.PickMultipleFilesAsync();
-                if (files.Count > 0)
+                var progressHandler = new Progress<LiveOperationProgress>(
+                    (progress) => { });
+                OneDriveManager._cancelUpload = new System.Threading.CancellationTokenSource();
+                foreach (var file in files)
                 {
-                    var progressHandler = new Progress<LiveOperationProgress>(
-                        (progress) => {  });
-                    OneDriveManager._cancelUpload = new System.Threading.CancellationTokenSource();
-                    foreach (var file in files)
-                    {
-                        await _client.BackgroundUploadAsync(OneDriveManager._folderId,
-                            file.Name, file, Microsoft.Live.OverwriteOption.Overwrite, OneDriveManager._cancelUpload.Token, progressHandler);
-                    }
-                        
+                    await _client.BackgroundUploadAsync(OneDriveManager._folderId,
+                        file.Name, file, Microsoft.Live.OverwriteOption.Overwrite, OneDriveManager._cancelUpload.Token, progressHandler);
                 }
-            }
-            catch (System.Threading.Tasks.TaskCanceledException)
-            {
-            }
-            catch (LiveConnectException exception)
-            {
+
             }
         }
 
-        public static async Task DeleteFolder(string folderId)
+        public static async Task DeleteFolderAsync(string folderId)
         {
             if (_client != null)
             {
                 LiveOperationResult operationResult = await _client.DeleteAsync(folderId);
+                OneDriveManager._folderId = null;
             }
 
         }
-                
-        public static async void CheckIfExists()
+
+        public static async Task CheckIfExists()
         {
             if (OneDriveManager._folderId == null)
             {
