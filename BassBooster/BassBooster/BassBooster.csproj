@@ -138,6 +138,7 @@
     <None Include="BassBooster_StoreKey.pfx" />
     <None Include="Package.StoreAssociation.xml" />
     <None Include="BassBooster_TemporaryKey.pfx" />
+    <Content Include="Assets\MainPageLogo.png" />
     <Content Include="Assets\BadgeLogo.scale-180.png" />
     <Content Include="Assets\Speaker_Icon_white.png" />
     <Content Include="Assets\SplashScreen.scale-140.png" />
