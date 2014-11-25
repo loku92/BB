@@ -48,22 +48,47 @@ namespace BassBooster
 
         private async void LiveLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            LiveLoginButton.Visibility = Visibility.Collapsed; 
-            var result = await OneDriveManager.SignInOneDriveAsync();
-            if (result.ToString() == "0")
+            LiveLoginButton.Visibility = Visibility.Collapsed;
+            try
             {
+                await OneDriveManager.SignInOneDriveAsync();
                 await OneDriveManager.CreateDirectoryAsync();
                 DownloadButton.Visibility = Visibility.Visible;
                 UploadButton.Visibility = Visibility.Visible;
                 DeleteButton.Visibility = Visibility.Visible;
-                StatusBlock.Text = DateTime.Now.ToString("HH:mm") + " Successfully logged in.\n";                
+                StatusBlock.Text = DateTime.Now.ToString("HH:mm") + " Successfully logged in.\n"; 
             }
-            else
+            catch (LiveAuthException ex)
             {
                 LiveLoginButton.Content = "Retry";
                 LiveLoginButton.Visibility = Visibility.Visible;
+                DownloadButton.Visibility = Visibility.Collapsed;
+                UploadButton.Visibility = Visibility.Collapsed;
+                DeleteButton.Visibility = Visibility.Collapsed;
+                CancelUpload.Visibility = Visibility.Collapsed;
                 StatusBlock.Text = DateTime.Now.ToString("HH:mm") + " Failed to log in. Try again. \n";
             }
+            catch (LiveConnectException ex)
+            {
+                LiveLoginButton.Content = "Retry";
+                LiveLoginButton.Visibility = Visibility.Visible;
+                DownloadButton.Visibility = Visibility.Collapsed;
+                UploadButton.Visibility = Visibility.Collapsed;
+                DeleteButton.Visibility = Visibility.Collapsed;
+                CancelUpload.Visibility = Visibility.Collapsed;
+                StatusBlock.Text = DateTime.Now.ToString("HH:mm") + " Failed to log in. Try again. \n";
+            }
+            catch (NullReferenceException)
+            {
+                LiveLoginButton.Content = "Retry";
+                LiveLoginButton.Visibility = Visibility.Visible;
+                DownloadButton.Visibility = Visibility.Collapsed;
+                UploadButton.Visibility = Visibility.Collapsed;
+                DeleteButton.Visibility = Visibility.Collapsed;
+                CancelUpload.Visibility = Visibility.Collapsed;
+                StatusBlock.Text = DateTime.Now.ToString("HH:mm") + " Failed to log in. Try again. Did You accept a OneDrive license? \n";
+            }
+            
         }
         
 

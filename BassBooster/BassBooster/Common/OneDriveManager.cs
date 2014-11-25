@@ -16,12 +16,10 @@ namespace BassBooster.Common
         private const string FOLDER_NAME = "BBLyrics";
         public const string EXTENSION = ".bbf";
 
-        public async static Task<int> SignInOneDriveAsync()
+        public async static Task SignInOneDriveAsync()
         {
             if (OneDriveManager._client == null)
-            {
-                try
-                {
+            {                
                     var authClient = new LiveAuthClient();
                     LiveLoginResult result = await authClient.LoginAsync(new string[] { "wl.signin", "wl.skydrive", "wl.skydrive_update" });
 
@@ -31,17 +29,7 @@ namespace BassBooster.Common
                         var meResult = await OneDriveManager._client.GetAsync("me");
                         dynamic meData = meResult.Result;
                     }
-                }
-                catch (LiveAuthException ex)
-                {
-                    return -1;
-                }
-                catch (LiveConnectException ex)
-                {
-                    return -1;
-                }
             }
-            return 0;
         }
 
 
