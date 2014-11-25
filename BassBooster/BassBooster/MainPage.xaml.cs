@@ -619,6 +619,12 @@ namespace BassBooster
 
         #endregion
 
+        private void LogoImage_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            LogoImage.RenderTransform = new RotateTransform() { CenterX = 90, CenterY = 90, Angle = angle + 180 };
+            angle += 180;
+        }
+        private int angle = 0;
 
     }
 

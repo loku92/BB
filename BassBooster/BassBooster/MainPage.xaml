@@ -31,7 +31,7 @@
             <MediaElement x:Name="MP3Player" Visibility="Collapsed" AudioCategory="BackgroundCapableMedia" Grid.Row="0"/>
         </Grid>
         <!-- -->
-        <Image Grid.Column="0" Grid.Row="0" Source="Assets/MainPageLogo.png" Stretch="UniformToFill"></Image>
+        <Image x:Name="LogoImage" Grid.Column="0" Grid.Row="0" Source="Assets/MainPageLogo.png" Stretch="UniformToFill" DoubleTapped="LogoImage_DoubleTapped"></Image>
         <Grid x:Name="ControlGrid" Grid.Column="1" Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="5*"/>
