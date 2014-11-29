@@ -297,10 +297,12 @@ namespace BassBooster
                     _Tracklist.Add(new Track (_Tracklist.Music.Count,musicProperties.Artist,musicProperties.Title,f.Name,musicProperties.Duration));
                     i++;
                 }
-                //setting stream       
-                var stream = await _Playlist[0].OpenAsync(Windows.Storage.FileAccessMode.Read);
+                //refresh track listbox 
+                TrackListBox.ItemsSource = null;
+                TrackListBox.ItemsSource = _Tracklist.Music;
                 if (!wasPlaying)
                 {
+                    var stream = await _Playlist[0].OpenAsync(Windows.Storage.FileAccessMode.Read);
                     MP3Player.SetSource(stream, _Playlist[0].ContentType);
                     //mark currently played file
                     _CurrentId = 0;
@@ -313,12 +315,10 @@ namespace BassBooster
                 {
                     Shuffle();
                 }
-                //refresh track listbox
-                TrackListBox.ItemsSource = null;
-                TrackListBox.ItemsSource = _Tracklist.Music;
+
+                TrackListBox.SelectedIndex = _CurrentId;                
                 _Empty = false;
                 MP3Player.Play();
-                TrackListBox.SelectedIndex = _CurrentId;
                 //set button icon to pause
                 PlayButton.Icon = new SymbolIcon(Symbol.Pause);
 
@@ -619,12 +619,6 @@ namespace BassBooster
 
         #endregion
 
-        private void LogoImage_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            LogoImage.RenderTransform = new RotateTransform() { CenterX = 90, CenterY = 90, Angle = angle + 180 };
-            angle += 180;
-        }
-        private int angle = 0;
 
     }
 
