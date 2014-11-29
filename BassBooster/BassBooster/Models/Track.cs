@@ -21,7 +21,7 @@ namespace BassBooster.Models
             this.Artist = artist;
             this.Title = title;
             this.FileName = fName;
-            this.Duration = (int)length.TotalSeconds;
+            this.Duration = (int)length.TotalMilliseconds;
 
         }
 

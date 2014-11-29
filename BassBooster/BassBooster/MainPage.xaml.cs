@@ -105,9 +105,15 @@ namespace BassBooster
             if (t != null)
             {
                 if (t.ClassType.Equals(typeof(ListPage)))
+                {
                     TrackListBox.Visibility = Visibility.Visible;
+                    BgImage.Visibility = Visibility.Visible;
+                }
                 else
+                {
                     TrackListBox.Visibility = Visibility.Collapsed;
+                    BgImage.Visibility = Visibility.Collapsed;
+                }
                 SuspensionManager.SessionState["CurrentTab"] = tabList.SelectedIndex;
                 TabFrame.Navigate(t.ClassType);
             }

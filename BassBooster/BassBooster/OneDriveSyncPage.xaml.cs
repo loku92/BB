@@ -35,6 +35,10 @@ namespace BassBooster
         
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            if (SuspensionManager.SessionState.ContainsKey("Status"))
+            {
+                StatusBlock.Text = Convert.ToString(SuspensionManager.SessionState["Status"]);
+            }
             
             if (OneDriveManager._client == null)
             {
@@ -42,9 +46,24 @@ namespace BassBooster
                 UploadButton.Visibility = Visibility.Collapsed;
                 DeleteButton.Visibility = Visibility.Collapsed;
                 CancelUpload.Visibility = Visibility.Collapsed;
-                LiveLoginButton_Click(null, null);                
+                LiveLoginButton_Click(null, null);
+            }
+            else
+            {
+                DownloadButton.Visibility = Visibility.Visible;
+                UploadButton.Visibility = Visibility.Visible;
+                DeleteButton.Visibility = Visibility.Visible;
+                CancelUpload.Visibility = Visibility.Collapsed;
+                LiveLoginButton.Visibility = Visibility.Collapsed;
             }
         }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            base.OnNavigatingFrom(e);
+            SuspensionManager.SessionState["Status"] = StatusBlock.Text;
+        }
+
 
         private async void LiveLoginButton_Click(object sender, RoutedEventArgs e)
         {

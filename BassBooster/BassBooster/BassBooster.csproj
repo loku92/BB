@@ -112,6 +112,7 @@
     <Compile Include="Common\ToastManager.cs" />
     <Compile Include="Converters\NumberConverter.cs" />
     <Compile Include="Converters\TabConverter.cs" />
+    <Compile Include="Converters\TimeConverter.cs" />
     <Compile Include="Converters\TrackConverter.cs" />
     <Compile Include="ListPage.xaml.cs">
       <DependentUpon>ListPage.xaml</DependentUpon>
@@ -144,6 +145,7 @@
     <Content Include="Assets\SplashScreen.scale-140.png" />
     <Content Include="Assets\SplashScreen.scale-180.png" />
     <Content Include="Assets\Square310x310Logo.scale-100.png" />
+    <Content Include="Assets\wallpapers-music.png" />
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Fonts\LiveSymbol.ttf" />
     <None Include="packages.config" />
