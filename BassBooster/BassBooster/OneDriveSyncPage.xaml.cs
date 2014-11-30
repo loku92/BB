@@ -23,7 +23,7 @@ using Windows.UI.Xaml.Navigation;
 namespace BassBooster
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// Page to manage OneDrive synchronizing.
     /// </summary>
     public sealed partial class OneDriveSyncPage : Page
     {      
@@ -64,6 +64,12 @@ namespace BassBooster
             base.OnNavigatingFrom(e);
             SuspensionManager.SessionState["Status"] = StatusBlock.Text;
         }
+
+        /// <summary>
+        /// Live login button action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
 
         private async void LiveLoginButton_Click(object sender, RoutedEventArgs e)
@@ -108,9 +114,14 @@ namespace BassBooster
                 CancelUpload.Visibility = Visibility.Collapsed;
                 StatusBlock.Text = DateTime.Now.ToString("HH:mm") + " Failed to log in. Try again. Did You accept the OneDrive license? \n";
             }
-            
+            CancelUpload.Visibility = Visibility.Collapsed;
         }
         
+        /// <summary>
+        /// Delete button action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
@@ -127,6 +138,11 @@ namespace BassBooster
             }
         }
 
+        /// <summary>
+        /// Upload click button action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void Upload_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -158,6 +174,13 @@ namespace BassBooster
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Upload is being cancelled.\n";
             }
         }
+
+
+        /// <summary>
+        /// Button action for downloading
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         
         private async void DownloadButton_Click(object sender, RoutedEventArgs e)
         {

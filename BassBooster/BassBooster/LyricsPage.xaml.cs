@@ -23,7 +23,7 @@ using Windows.Web.Http;
 namespace BassBooster
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// Page to display downloaded lyrisc
     /// </summary>
     public sealed partial class LyricsPage : Page
     {
@@ -56,11 +56,21 @@ namespace BassBooster
             base.OnNavigatedFrom(e);
         }
 
+        /// <summary>
+        /// When WV completes loading website
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Browser_LoadCompleted(object sender, NavigationEventArgs e)
         {
             BrowserWV.Visibility = Visibility.Collapsed;
         }
 
+        /// <summary>
+        /// Event when WV completes navigation 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private async void Browser_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
             try {                 
@@ -123,6 +133,10 @@ namespace BassBooster
             }
         }
 
+        /// <summary>
+        /// Parses title to fit tekstowo.pl url
+        /// </summary>
+        /// <param name="text">song name</param>
         private void StringParser(ref string text)
         {
             text = text.Trim();

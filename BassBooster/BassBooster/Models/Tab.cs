@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace BassBooster.Models
 {
+    /// <summary>
+    /// DataModel for a frame
+    /// </summary>
     public class Tab
     {
         public string Name { get; set; }

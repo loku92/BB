@@ -8,14 +8,22 @@ using Windows.Storage;
 
 namespace BassBooster.Common
 {
+    /// <summary>
+    /// Class to Manage connection with WindowsLive and synchronizing files with OneDrive
+    /// </summary>
     public class OneDriveManager
     {
         public static LiveConnectClient _client = null;
         public static string _folderId;
         public static System.Threading.CancellationTokenSource CancelToken;
         private const string FOLDER_NAME = "BBLyrics";
-        public const string EXTENSION = ".bbf";
+        private string ext = ".bbf";
 
+
+        /// <summary>
+        /// Login into Windows Live 
+        /// </summary>
+        /// <returns></returns>
         public async static Task SignInOneDriveAsync()
         {
             if (OneDriveManager._client == null)
@@ -33,7 +41,10 @@ namespace BassBooster.Common
         }
 
 
-
+        /// <summary>
+        /// Creates directory in OneDrive Cloud
+        /// </summary>
+        /// <returns></returns>
         public async static Task<string> CreateDirectoryAsync()
         {
             string folderId = null;
@@ -69,6 +80,11 @@ namespace BassBooster.Common
             return folderId;
         }
 
+
+        /// <summary>
+        /// Downloads all files from BBLyrics folder in OneDrive cloud to Music folder
+        /// </summary>
+        /// <returns></returns>
         public static async Task DownloadFilesAsync()
         {
             await CheckIfExists();
@@ -86,6 +102,11 @@ namespace BassBooster.Common
             }
         }
 
+
+        /// <summary>
+        /// Uploads selected files to skydrive
+        /// </summary>
+        /// <returns></returns>
         public static async Task UploadFilesAsync()
         {
             await CheckIfExists();
@@ -107,6 +128,11 @@ namespace BassBooster.Common
             }
         }
 
+        /// <summary>
+        /// Deletes all data and folder from OneDrive cloud
+        /// </summary>
+        /// <param name="folderId">id of BBLyrics folder</param>
+        /// <returns></returns>
         public static async Task DeleteFolderAsync(string folderId)
         {
             if (_client != null)
@@ -117,6 +143,10 @@ namespace BassBooster.Common
 
         }
 
+        /// <summary>
+        /// Checks if BBLyrics file exists, if not it creats it
+        /// </summary>
+        /// <returns></returns>
         public static async Task CheckIfExists()
         {
             if (OneDriveManager._folderId == null)

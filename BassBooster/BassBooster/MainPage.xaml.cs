@@ -126,14 +126,14 @@ namespace BassBooster
 
         /// <summary>
         /// MediaContol
-        ///     For controling MP3 Player
+        /// For controling MP3 Player
         /// </summary>
         #region MediaControl
 
 
         /// <summary>
         /// MediaControl_NextTrackPressed
-        ///     When app is minimalized and next button is pressed
+        /// When app is minimalized and next button is pressed
         /// </summary>
         
         private async void MediaControl_NextTrackPressed(object sender, object e)
@@ -147,7 +147,7 @@ namespace BassBooster
 
         /// <summary>
         /// MediaControl_PreviousTrackPressed
-        ///     When app is minimalized and prev button is pressed
+        ///When app is minimalized and prev button is pressed
         /// </summary>
         private async void MediaControl_PreviousTrackPressed(object sender, object e)
         {
@@ -159,7 +159,7 @@ namespace BassBooster
 
         /// <summary>
         /// MediaControl_StopPressed
-        ///     When app is minimalized and stop button is pressed
+        /// When app is minimalized and stop button is pressed
         /// </summary>
         private async void MediaControl_StopPressed(object sender, object e)
         {
@@ -212,7 +212,7 @@ namespace BassBooster
 
         /// <summary>
         /// MP3Player_MediaEnded
-        ///     What to do when we track has finished
+        /// What to do when we track has finished
         /// </summary>
         private void MP3Player_MediaEnded(object sender, RoutedEventArgs e)
         {
@@ -223,7 +223,7 @@ namespace BassBooster
 
         /// <summary>
         /// MP3Player_MediaOpened
-        ///     What to do when we have loaded song successfully
+        /// What to do when we have loaded song successfully
         /// </summary>
         private void MP3Player_MediaOpened(object sender, RoutedEventArgs e)
         {
@@ -240,7 +240,7 @@ namespace BassBooster
 
         /// <summary>
         /// VolumeSlider_ValueChanged
-        ///     Volume slider code
+        /// Volume slider code
         /// </summary>
         private void VolumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
@@ -265,7 +265,7 @@ namespace BassBooster
 
         /// <summary>
         /// FileOpenButton_Click
-        ///     Opens FileOpenPicker to load tracks
+        /// Opens FileOpenPicker to load tracks
         /// </summary>
         private async void FileOpenButton_Click(object sender, RoutedEventArgs e)
         {
@@ -392,7 +392,7 @@ namespace BassBooster
 
         /// <summary>
         /// ClearListButton_Click
-        ///     To clear playlist
+        /// To clear playlist
         /// </summary>
         private void ClearListButton_Click(object sender, RoutedEventArgs e)
         {
@@ -411,7 +411,7 @@ namespace BassBooster
 
         /// <summary>
         /// ShuffleButton_Click
-        ///     Turn on/off playlist shuffle
+        /// Turn on/off playlist shuffle
         /// </summary>
         private void ShuffleButton_Click(object sender, RoutedEventArgs e)
         {
@@ -440,7 +440,7 @@ namespace BassBooster
 
         /// <summary>
         /// RepeatButton_Click
-        ///     Switch repeat whole tracklist or just 1 song
+        /// Switch repeat whole tracklist or just 1 song
         /// </summary>
         private void RepeatButton_Click(object sender, RoutedEventArgs e)
         {
@@ -460,7 +460,7 @@ namespace BassBooster
 
         /// <summary>
         /// TrackListBox_SelectionChanged
-        ///     Executed when we double click on playlist track
+        /// Executed when we double click on playlist track
         /// </summary>     
         private void TrackListBox_SelectionChanged(object sender, DoubleTappedRoutedEventArgs e)
         {
@@ -471,7 +471,7 @@ namespace BassBooster
 
         /// <summary>
         /// TimeSlider_ValueChanged
-        ///     Executed when we change position of time slider to navigate a song to right place
+        /// Executed when we change position of time slider to navigate a song to right place
         /// </summary> 
         private void TimeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
@@ -483,14 +483,14 @@ namespace BassBooster
 
         /// <summary>
         /// Shared action
-        ///     Repeated or some other code in one place
+        ///Repeated or some other code in one place
         /// </summary> 
         #region SharedOtherAction
 
 
         /// <summary>
         /// Tick_Action
-        ///     Tick on timer to move TimeSlider
+        /// Tick on timer to move TimeSlider
         /// </summary> 
         private void Tick_Action(object sender, object e)
         {
@@ -501,7 +501,7 @@ namespace BassBooster
 
         /// <summary>
         /// CommonAction
-        ///     Called when song is changed, updates UI and starts playing.
+        /// Called when song is changed, updates UI and starts playing.
         /// </summary>
         private async void CommonAction()
         {

@@ -8,6 +8,10 @@ using Windows.UI.Xaml.Data;
 
 namespace BassBooster.Converters
 {
+
+    /// <summary>
+    /// Class that converts time of track to string and is used in UI 
+    /// </summary>
     public class TimeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)

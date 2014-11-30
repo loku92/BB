@@ -8,9 +8,18 @@ using Windows.UI.Notifications;
 
 namespace BassBooster.Common
 {
+
+    /// <summary>
+    /// Class for managing toast notifications
+    /// </summary>
     public class ToastManager
     {
         public static bool isEnabled = false;
+
+        /// <summary>
+        /// Method to show toast with given string
+        /// </summary>
+        /// <param name="title">Title of a song</param>
         public static void ShowToast(string title)
         {
             if (isEnabled)

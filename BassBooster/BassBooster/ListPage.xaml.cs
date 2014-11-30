@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Navigation;
 namespace BassBooster
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// An empty frame to be used when we have playlist displayed
     /// </summary>
     public sealed partial class ListPage : Page
     {

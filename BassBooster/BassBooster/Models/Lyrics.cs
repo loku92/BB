@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace BassBooster.Models
 {
+
+    /// <summary>
+    /// DataModel of lyrics
+    /// </summary>
     public class Lyrics
     {
         public string FileName { get; set; }

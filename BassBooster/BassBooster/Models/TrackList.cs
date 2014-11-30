@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace BassBooster.Models
 {
+
+    /// <summary>
+    /// DataModel of playlist
+    /// </summary>
     public class TrackList
     {
         public List<Track> Music { get; set; }
@@ -28,7 +32,11 @@ namespace BassBooster.Models
             return Music[i].ToString();
         }
 
-
+        /// <summary>
+        /// Returns duration of the song with given id
+        /// </summary>
+        /// <param name="id">Song's id</param>
+        /// <returns></returns>
         public string GetDurationStringById(int id)
         {
             var t = (from track in Music
@@ -44,6 +52,11 @@ namespace BassBooster.Models
             return  duration;
         }
 
+        /// <summary>
+        /// Return duration of song as integer
+        /// </summary>
+        /// <param name="id">Song/s id</param>
+        /// <returns></returns>
         public int GetDurationIntById(int id)
         {
             var t = (from track in Music

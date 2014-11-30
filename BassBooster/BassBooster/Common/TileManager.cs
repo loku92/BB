@@ -8,11 +8,19 @@ using Windows.UI.Notifications;
 
 namespace BassBooster.Common
 {
+    /// <summary>
+    /// Class for managing Tile notifications
+    /// </summary>
     public class TileManager
     {
         public static bool isEnabled = true;
 
 
+        /// <summary>
+        /// Method for updating tile with given data for given duration
+        /// </summary>
+        /// <param name="title">Title of the song</param>
+        /// <param name="sec">Duration of the song in milisec</param>
         public static void UpdateTile(string title, int sec)
         {
             if ( TileManager.isEnabled )
@@ -21,6 +29,12 @@ namespace BassBooster.Common
                 TileManager.UpdateSquareTile(title, sec);
             }
         }
+
+        /// <summary>
+        /// 310x150 tile update
+        /// </summary>
+        /// <param name="title">Title of the song</param>
+        /// <param name="sec">Duration of the song in milisec</param>
         public static void UpdateWideTile(string title, int sec)
         {
             XmlDocument tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileWide310x150Text04);
@@ -30,6 +44,12 @@ namespace BassBooster.Common
             tileNotification.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(sec);
             TileUpdateManager.CreateTileUpdaterForApplication().Update(tileNotification);
         }
+
+        /// <summary>
+        /// 150x150 Tile update
+        /// </summary>
+        /// <param name="title">Title of the song</param>
+        /// <param name="sec">Duration of the song in milisec</param>
 
         public static void UpdateSquareTile(string title, int sec)
         {
@@ -61,13 +81,14 @@ namespace BassBooster.Common
             TileUpdateManager.CreateTileUpdaterForApplication().Update(tileNotification);
         }
 
-
+        /// <summary>
+        /// Method to clear tile (sometimes may not work)
+        /// </summary>
         public static void ClearTile()
         {
-            if (isEnabled)
-            {
-                Windows.UI.Notifications.TileUpdateManager.CreateTileUpdaterForApplication().Clear();
-            }
+            
+            Windows.UI.Notifications.TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+            
         }
     
     }

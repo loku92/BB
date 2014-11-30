@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace BassBooster.Models
 {
+    /// <summary>
+    /// DataModel of single song
+    /// </summary>
     public class Track
     {        
         public int Id { get; set; }

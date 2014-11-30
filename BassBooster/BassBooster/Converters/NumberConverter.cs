@@ -8,6 +8,9 @@ using Windows.UI.Xaml.Data;
 
 namespace BassBooster.Converters
 {
+    /// <summary>
+    /// Class that converts id of song to string and can be used in UI
+    /// </summary>
     public class NumberConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
