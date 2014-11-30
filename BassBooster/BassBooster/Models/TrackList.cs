@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,7 +49,10 @@ namespace BassBooster.Models
             var t = (from track in Music
                      where track.Id == id
                      select track).Single();
-            return t.Duration;
+#if DEBUG
+            Debug.WriteLine(t.Duration / 1000);
+#endif
+            return t.Duration/1000;
         }
     }
 }

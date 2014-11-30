@@ -48,6 +48,14 @@ namespace BassBooster
             }
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            SuspensionManager.SessionState["Artist"] = ArtistBox.Text;
+            SuspensionManager.SessionState["Title"] = TitleBox.Text;
+            SuspensionManager.SessionState["Lyrics"] = LyricsTextBox.Text;
+            base.OnNavigatedFrom(e);
+        }
+
         private void Browser_LoadCompleted(object sender, NavigationEventArgs e)
         {
             BrowserWV.Visibility = Visibility.Collapsed;

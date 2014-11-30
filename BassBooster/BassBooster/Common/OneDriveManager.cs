@@ -12,7 +12,7 @@ namespace BassBooster.Common
     {
         public static LiveConnectClient _client = null;
         public static string _folderId;
-        public static System.Threading.CancellationTokenSource _cancelUpload;
+        public static System.Threading.CancellationTokenSource CancelToken;
         private const string FOLDER_NAME = "BBLyrics";
         public const string EXTENSION = ".bbf";
 
@@ -97,13 +97,13 @@ namespace BassBooster.Common
             {
                 var progressHandler = new Progress<LiveOperationProgress>(
                     (progress) => { });
-                OneDriveManager._cancelUpload = new System.Threading.CancellationTokenSource();
+                OneDriveManager.CancelToken = new System.Threading.CancellationTokenSource();
                 foreach (var file in files)
                 {
                     await _client.BackgroundUploadAsync(OneDriveManager._folderId,
-                        file.Name, file, Microsoft.Live.OverwriteOption.Overwrite, OneDriveManager._cancelUpload.Token, progressHandler);
+                        file.Name, file, Microsoft.Live.OverwriteOption.Overwrite, OneDriveManager.CancelToken.Token, progressHandler);
                 }
-
+                OneDriveManager.CancelToken = null;
             }
         }
 

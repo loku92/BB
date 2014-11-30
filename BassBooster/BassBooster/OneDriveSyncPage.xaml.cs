@@ -46,6 +46,7 @@ namespace BassBooster
                 UploadButton.Visibility = Visibility.Collapsed;
                 DeleteButton.Visibility = Visibility.Collapsed;
                 CancelUpload.Visibility = Visibility.Collapsed;
+                StatusBlock.Text = DateTime.Now.ToString("HH:mm") + " Logging into OneDrive.\n"; 
                 LiveLoginButton_Click(null, null);
             }
             else
@@ -105,7 +106,7 @@ namespace BassBooster
                 UploadButton.Visibility = Visibility.Collapsed;
                 DeleteButton.Visibility = Visibility.Collapsed;
                 CancelUpload.Visibility = Visibility.Collapsed;
-                StatusBlock.Text = DateTime.Now.ToString("HH:mm") + " Failed to log in. Try again. Did You accept a OneDrive license? \n";
+                StatusBlock.Text = DateTime.Now.ToString("HH:mm") + " Failed to log in. Try again. Did You accept the OneDrive license? \n";
             }
             
         }
@@ -132,24 +133,29 @@ namespace BassBooster
             {
                 await OneDriveManager.CreateDirectoryAsync();
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Uploading please wait...\n";
+                CancelUpload.Visibility = Visibility.Visible;
                 await OneDriveManager.UploadFilesAsync();
+                CancelUpload.Visibility = Visibility.Collapsed;
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Files were uploaded successfully.\n";
             }
             catch (LiveConnectException exception)
             {
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Failed to upload files, check your Internet connection.\n";
+                CancelUpload.Visibility = Visibility.Collapsed;
             }
             catch (System.Threading.Tasks.TaskCanceledException)
             {
+                StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Upload of files was cancelled.\n";
+                CancelUpload.Visibility = Visibility.Collapsed;
             }
         }
 
         private void CancelUpload_Click(object sender, RoutedEventArgs e)
         {
-            if (OneDriveManager._cancelUpload != null)
+            if (OneDriveManager.CancelToken != null)
             {
-                OneDriveManager._cancelUpload.Cancel();
-                StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Upload is cancelled.\n";
+                OneDriveManager.CancelToken.Cancel();
+                StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Upload is being cancelled.\n";
             }
         }
         
