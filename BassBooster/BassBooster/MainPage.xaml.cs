@@ -611,16 +611,20 @@ namespace BassBooster
         /// </summary>
         public void Shuffle()
         {
-            _ShufflePlaylist = new List<int>();
-            int i = 0;
-            
-            foreach (var song in _Playlist){
-                _ShufflePlaylist.Add(i++);
-            }
+            if (!_Empty)
+            {
+                _ShufflePlaylist = new List<int>();
+                int i = 0;
 
-            Random rnd = new Random();
-            _ShufflePlaylist = (from t in _ShufflePlaylist
-                                select t).OrderBy(item => rnd.Next()).ToList();
+                foreach (var song in _Playlist)
+                {
+                    _ShufflePlaylist.Add(i++);
+                }
+
+                Random rnd = new Random();
+                _ShufflePlaylist = (from t in _ShufflePlaylist
+                                    select t).OrderBy(item => rnd.Next()).ToList();
+            }
         }
 
         #endregion
