@@ -13,6 +13,7 @@
         <Converters:TrackConverter x:Key="TrackConverter"/>
         <Converters:TabConverter x:Key="TabConverter"/>
         <Converters:TimeConverter x:Key="TimeConverter" />
+        <Converters:ImageConverter x:Key="ImageConverter"/>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -45,7 +46,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock x:Name="TimeBox" Grid.Column="1" HorizontalAlignment="Center" Margin="0,20,0,0" TextWrapping="Wrap" Text="0:00" VerticalAlignment="Center" />
                 <TextBlock x:Name="TitleBox" Grid.Column="0" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="Artist - Title" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlockStyle}"/>
-                <Slider x:Name="TimeSlider" Grid.Column="1" LargeChange="9" VerticalAlignment="Center" Margin="10,0,30,0" ValueChanged="TimeSlider_ValueChanged" Foreground="#FFAC4795" IsThumbToolTipEnabled="False"/>
+                <Slider x:Name="TimeSlider" Grid.Column="1" LargeChange="9" VerticalAlignment="Center" Margin="10,0,30,0" ValueChanged="TimeSlider_ValueChanged" Foreground="#FF478CAC" IsThumbToolTipEnabled="False"/>
             </Grid>
             <!-- -->
             <AppBarButton x:Name="PrevButton"  Icon="Previous" Label="Previous"   Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Click="PrevButton_Click"/>
@@ -75,27 +76,31 @@
                         <TextBlock Text="{Binding Converter={StaticResource TabConverter}}" Style="{StaticResource BodyTextBlockStyle}" Foreground="Azure"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
-            </ListBox>
+            </ListBox>            
         </Grid>
         <Frame x:Name="TabFrame" Grid.Column="1" Grid.Row="1" />
         <Image x:Name="BgImage" Source="Assets/wallpapers-music.png" Grid.Column="1" Grid.Row="1" Stretch="UniformToFill" ></Image>
-        <ListBox x:Name="TrackListBox" SelectionMode="Single"  Grid.Column="1" Grid.Row="1"  BorderThickness="0" Style="{StaticResource TabStyleListBox2}"
-                 VerticalAlignment="Top" Margin="0" DoubleTapped="TrackListBox_SelectionChanged" ManipulationMode="All" Background="Transparent">
-            <ListBox.ItemTemplate>
+        <GridView x:Name="TrackListBox" SelectionMode="Single"  Grid.Column="1" Grid.Row="1"  BorderThickness="0" 
+                 VerticalAlignment="Top" DoubleTapped="TrackListBox_SelectionChanged" ManipulationMode="All" Background="Transparent" RequestedTheme="Dark" Margin="20,20,0,0">            
+            <GridView.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid Height="90" Width="480" Margin="10">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2.5*" />
-                            <ColumnDefinition Width="7.0*"/>
-                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Converter={StaticResource NumberConverter1}}" Style="{StaticResource BodyTextBlockStyle}" Foreground="WhiteSmoke" Grid.Column="0" SelectionHighlightColor="#FFB45017" />
-                        <TextBlock Text="{Binding Converter={StaticResource TrackConverter}}" Style="{StaticResource BodyTextBlockStyle}" Foreground="WhiteSmoke" Grid.Column="1" Margin="20,0,0,0" />
-                        <TextBlock Text="{Binding Converter={StaticResource TimeConverter}}" Style="{StaticResource BodyTextBlockStyle}" Foreground="WhiteSmoke" Grid.Column="2" Margin="20,0,0,0" HorizontalAlignment="Right" />
+                        <Border  Width="100" Height="100">
+                            <Image Stretch="UniformToFill" Source="{Binding Converter={StaticResource ImageConverter}}" />
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0,0,0">
+                            <TextBlock Text="{Binding Converter={StaticResource NumberConverter1}}" Style="{StaticResource TitleTextBlockStyle}" Foreground="WhiteSmoke" Grid.Column="0" SelectionHighlightColor="#FFB45017" TextWrapping="NoWrap" />
+                            <TextBlock Text="{Binding Converter={StaticResource TrackConverter}}" Style="{StaticResource TitleTextBlockStyle}" Foreground="WhiteSmoke" Grid.Column="1" Margin="20,0,0,0" TextWrapping="NoWrap" />
+                            <TextBlock Text="{Binding Converter={StaticResource TimeConverter}}" Style="{StaticResource BodyTextBlockStyle}" Foreground="WhiteSmoke" Grid.Column="2" Margin="20,0,0,0"  MaxHeight="60" />
+                        </StackPanel>
                     </Grid>
                 </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            </GridView.ItemTemplate>
+        </GridView>
 
 
     </Grid>
