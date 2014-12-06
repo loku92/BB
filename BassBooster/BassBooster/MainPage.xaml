@@ -68,7 +68,7 @@
                 <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
             <TextBlock x:Name="NavBox" Text="Menu:" Grid.Row="0"  Foreground="WhiteSmoke" Style="{StaticResource SubheaderTextBlockStyle}" Margin="20,10,0,0" />
-            <ListBox x:Name="NavTab" SelectionMode="Single"  HorizontalAlignment="Left"  Grid.Row="1"  BorderThickness="0" Style="{StaticResource TabStyleListBox}"
+            <ListBox x:Name="NavTab" AutomationProperties.AutomationId="NavTabSelector" SelectionMode="Single"  HorizontalAlignment="Left"  Grid.Row="1"  BorderThickness="0" Style="{StaticResource TabStyleListBox}"
                  VerticalAlignment="Top" Margin="0" SelectionChanged="NavTab_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
