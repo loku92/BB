@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UITesting.HtmlControls;
 using Microsoft.VisualStudio.TestTools.UITesting.DirectUIControls;
 using Microsoft.VisualStudio.TestTools.UITesting.WindowsRuntimeControls;
 using Keyboard = Microsoft.VisualStudio.TestTools.UITesting.Keyboard;
+using System.Threading.Tasks;
 
 
 namespace CodedUITestProject
@@ -25,9 +26,25 @@ namespace CodedUITestProject
         public void CodedUITestMethod1()
         {
             XamlWindow myAppWindow = XamlWindow.Launch("50105L0ku.BassBooster_5j40njvtpg6xe!App");
+            
+            Gesture.Tap(this.UIMap.UIBassBoosterWindow.UIItemPane.UILyricsTextBoxEdit);
+            UIMap.UIBassBoosterWindow.UITitleBoxEdit.Text = "8mile";
+            UIMap.UIBassBoosterWindow.UIArtistBoxEdit.Text = "Eminem";
             Gesture.Tap(this.UIMap.UIBassBoosterWindow.UISearchButton);
-            this.UIMap.CheckDownloadedLyrics();
+            for (int i = 0; i < 1000000000; i++)
+            {
+                //Another lame hack because task delay doesn't work...
+            } 
+
+            this.UIMap.AssertMethod1();
         }
+
+        [TestMethod]
+        public void CodedUITest2()
+        {
+            this.UIMap.LyricsDownloadTestMethod2();
+        }
+
 
         #region Additional test attributes
 

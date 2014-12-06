@@ -21,6 +21,7 @@ namespace CodedUITestProject
     using Keyboard = Microsoft.VisualStudio.TestTools.UITesting.Keyboard;
     using Mouse = Microsoft.VisualStudio.TestTools.UITesting.Mouse;
     using MouseButtons = Microsoft.VisualStudio.TestTools.UITest.Input.MouseButtons;
+    using System.Threading.Tasks;
     
     
     [GeneratedCode("Coded UITest Builder", "12.0.30501.0")]
@@ -30,19 +31,32 @@ namespace CodedUITestProject
         /// <summary>
         /// AssertMethod1 - Use 'AssertMethod1ExpectedValues' to pass parameters into this method.
         /// </summary>
-        public void CheckDownloadedLyrics()
+        public async void AssertMethod1()
         {
             #region Variable Declarations
             XamlButton uIAddMusicButton = this.UIBassBoosterWindow.UIAddMusicButton;
             XamlEdit uILyricsTextBoxEdit = this.UIBassBoosterWindow.UIItemPane.UILyricsTextBoxEdit;
             #endregion
+            await Task.Delay(100000); //doesnt work
 
             // Verify that the 'ControlType' property of 'Add Music' button equals 'Button'
             Assert.AreEqual(this.AssertMethod1ExpectedValues.UIAddMusicButtonControlType, uIAddMusicButton.ControlType.ToString(), "aaa");
 
-            // Verify that the 'ControlType' property of 'LyricsTextBox' text box isNotNull'
-            Assert.IsNotNull(uILyricsTextBoxEdit.ControlType.ToString());
-            //StringAssert.Contains(uILyricsTextBoxEdit.ControlType.ToString(), this.AssertMethod1ExpectedValues.UILyricsTextBoxEditControlType, "Failed.");
+            // Verify that the 'ControlType' property of 'LyricsTextBox' text box contains 'Sometime I just'
+            StringAssert.Contains(uILyricsTextBoxEdit.ControlType.ToString(), this.AssertMethod1ExpectedValues.UILyricsTextBoxEditControlType, "FAil");
+        }
+        
+        /// <summary>
+        /// LyricsDownloadTestMethod2
+        /// </summary>
+        public void LyricsDownloadTestMethod2()
+        {
+            #region Variable Declarations
+            XamlEdit uIArtistBoxEdit = this.UIBassBoosterWindow.UIArtistBoxEdit;
+            #endregion
+
+            // Verify that the 'ControlType' property of 'ArtistBox' text box is not equal to 'null'
+            Assert.IsNotNull(uIArtistBoxEdit.ControlType, "Artist Fail");
         }
         
         #region Properties
@@ -171,6 +185,22 @@ namespace CodedUITestProject
                 return this.mUIItemPane;
             }
         }
+        
+        public XamlEdit UIArtistBoxEdit
+        {
+            get
+            {
+                if ((this.mUIArtistBoxEdit == null))
+                {
+                    this.mUIArtistBoxEdit = new XamlEdit(this);
+                    #region Search Criteria
+                    this.mUIArtistBoxEdit.SearchProperties[XamlEdit.PropertyNames.AutomationId] = "ArtistBox";
+                    this.mUIArtistBoxEdit.WindowTitles.Add("Bass Booster");
+                    #endregion
+                }
+                return this.mUIArtistBoxEdit;
+            }
+        }
         #endregion
         
         #region Fields
@@ -181,6 +211,8 @@ namespace CodedUITestProject
         private XamlButton mUISearchButton;
         
         private UIItemPane mUIItemPane;
+        
+        private XamlEdit mUIArtistBoxEdit;
         #endregion
     }
     
