@@ -79,7 +79,7 @@
             </ListBox>            
         </Grid>
         <Frame x:Name="TabFrame" Grid.Column="1" Grid.Row="1" />
-        <Image x:Name="BgImage" Source="Assets/wallpapers-music.png" Grid.Column="1" Grid.Row="1" Stretch="UniformToFill" ></Image>
+        <Image x:Name="BgImage" Source="Assets/MainPage/background-218180.jpg" Grid.Column="1" Grid.Row="1" Stretch="UniformToFill" />
         <GridView x:Name="TrackListBox" SelectionMode="Single"  Grid.Column="1" Grid.Row="1"  BorderThickness="0" 
                  VerticalAlignment="Top" DoubleTapped="TrackListBox_SelectionChanged" ManipulationMode="All" Background="Transparent" RequestedTheme="Dark" Margin="20,20,0,0">            
             <GridView.ItemTemplate>

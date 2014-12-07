@@ -34,8 +34,6 @@ namespace BassBooster.Common
                     if (result.Status == LiveConnectSessionStatus.Connected)
                     {
                         OneDriveManager._client = new LiveConnectClient(result.Session);
-                        var meResult = await OneDriveManager._client.GetAsync("me");
-                        dynamic meData = meResult.Result;
                     }
             }
         }
@@ -45,7 +43,7 @@ namespace BassBooster.Common
         /// Creates directory in OneDrive Cloud
         /// </summary>
         /// <returns></returns>
-        public async static Task<string> CreateDirectoryAsync()
+        public async static Task<string> GetFolderIdAsync()
         {
             string folderId = null;
             var query = "me/skydrive/files?filter=folders,albums";
@@ -63,21 +61,19 @@ namespace BassBooster.Common
 
             if (folderId == null)
             {
-                try
-                {
-                    var folderData = new Dictionary<string, object>();
-                    folderData.Add("name", OneDriveManager.FOLDER_NAME);
-                    LiveOperationResult operationResult = await OneDriveManager._client.PostAsync("me/skydrive", folderData);
-                    result = operationResult.Result;
-                    return result.id;
-                }
-                catch (LiveConnectException exc)
-                {
-                    return null;
-                }
+                result = await CreateDirectoryAsync();
             }
             OneDriveManager._folderId = folderId;
             return folderId;
+        }
+
+        public async static Task<string> CreateDirectoryAsync()
+        {
+            var folderData = new Dictionary<string, object>();
+            folderData.Add("name", OneDriveManager.FOLDER_NAME);
+            LiveOperationResult operationResult = await OneDriveManager._client.PostAsync("me/skydrive", folderData);
+            dynamic result = operationResult.Result;
+            return result.id;
         }
 
 
@@ -151,7 +147,7 @@ namespace BassBooster.Common
         {
             if (OneDriveManager._folderId == null)
             {
-                await CreateDirectoryAsync();
+                await GetFolderIdAsync();
             }
         }
 

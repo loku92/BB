@@ -78,7 +78,7 @@ namespace BassBooster
             try
             {
                 await OneDriveManager.SignInOneDriveAsync();
-                await OneDriveManager.CreateDirectoryAsync();
+                await OneDriveManager.GetFolderIdAsync();
                 DownloadButton.Visibility = Visibility.Visible;
                 UploadButton.Visibility = Visibility.Visible;
                 DeleteButton.Visibility = Visibility.Visible;
@@ -127,7 +127,7 @@ namespace BassBooster
         {
             try
             {
-                await OneDriveManager.CreateDirectoryAsync();
+                await OneDriveManager.GetFolderIdAsync();
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Deleting BBLyrics folder please wait...\n";
                 await OneDriveManager.DeleteFolderAsync(OneDriveManager._folderId);
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Folder deleted.\n";
@@ -147,7 +147,7 @@ namespace BassBooster
         {
             try
             {
-                await OneDriveManager.CreateDirectoryAsync();
+                await OneDriveManager.GetFolderIdAsync();
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Uploading please wait...\n";
                 CancelUpload.Visibility = Visibility.Visible;
                 await OneDriveManager.UploadFilesAsync();
@@ -186,7 +186,7 @@ namespace BassBooster
         {
             try
             {
-                await OneDriveManager.CreateDirectoryAsync();
+                await OneDriveManager.GetFolderIdAsync();
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Downloading please wait...\n";
                 await OneDriveManager.DownloadFilesAsync();
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Files were downloaded successfully to Music Directory\n";
