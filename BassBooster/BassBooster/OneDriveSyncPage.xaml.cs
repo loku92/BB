@@ -145,24 +145,31 @@ namespace BassBooster
         /// <param name="e"></param>
         private async void Upload_Click(object sender, RoutedEventArgs e)
         {
+            UploadButton.Visibility = Visibility.Collapsed;
+            DeleteButton.Visibility = Visibility.Collapsed;
+            DownloadButton.Visibility = Visibility.Collapsed;
             try
             {
                 await OneDriveManager.GetFolderIdAsync();
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Uploading please wait...\n";
                 CancelUpload.Visibility = Visibility.Visible;
                 await OneDriveManager.UploadFilesAsync();
-                CancelUpload.Visibility = Visibility.Collapsed;
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Files were uploaded successfully.\n";
             }
             catch (LiveConnectException exception)
             {
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Failed to upload files, check your Internet connection.\n";
-                CancelUpload.Visibility = Visibility.Collapsed;
             }
             catch (System.Threading.Tasks.TaskCanceledException)
             {
-                StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Upload of files was cancelled.\n";
+                StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Upload of files was cancelled.\n";                
+            }
+            finally
+            {
                 CancelUpload.Visibility = Visibility.Collapsed;
+                UploadButton.Visibility = Visibility.Visible;
+                DownloadButton.Visibility = Visibility.Visible;
+                DeleteButton.Visibility = Visibility.Visible;
             }
         }
 
@@ -171,7 +178,7 @@ namespace BassBooster
             if (OneDriveManager.CancelToken != null)
             {
                 OneDriveManager.CancelToken.Cancel();
-                StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Upload is being cancelled.\n";
+                StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Action has been cancelled.\n";
             }
         }
 
@@ -184,16 +191,31 @@ namespace BassBooster
         
         private async void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
+            UploadButton.Visibility = Visibility.Collapsed;
+            DeleteButton.Visibility = Visibility.Collapsed;
+            DownloadButton.Visibility = Visibility.Collapsed;
             try
-            {
+            {                
                 await OneDriveManager.GetFolderIdAsync();
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Downloading please wait...\n";
+                CancelUpload.Visibility = Visibility.Visible;
                 await OneDriveManager.DownloadFilesAsync();
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Files were downloaded successfully to Music Directory\n";
             }
             catch (LiveConnectException exception)
             {
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Failed to download files, check your Internet connection.\n";
+            }
+            catch (System.Threading.Tasks.TaskCanceledException)
+            {
+                StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Download of files was cancelled.\n";
+            }
+            finally
+            {
+                CancelUpload.Visibility = Visibility.Collapsed;
+                UploadButton.Visibility = Visibility.Visible;
+                DownloadButton.Visibility = Visibility.Visible;
+                DeleteButton.Visibility = Visibility.Visible;
             }
         }
 

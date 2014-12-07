@@ -40,9 +40,9 @@ namespace BassBooster.Common
 
 
         /// <summary>
-        /// Creates directory in OneDrive Cloud
+        /// Checks if directory exists in OneDrive and sets id.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>folder id</returns>
         public async static Task<string> GetFolderIdAsync()
         {
             string folderId = null;
@@ -67,6 +67,11 @@ namespace BassBooster.Common
             return folderId;
         }
 
+        /// <summary>
+        /// Creates directory in OneDrive
+        /// </summary>
+        /// <returns>new folder id</returns>
+
         public async static Task<string> CreateDirectoryAsync()
         {
             var folderData = new Dictionary<string, object>();
@@ -89,13 +94,17 @@ namespace BassBooster.Common
             List<string> fileNames = new List<string>();
             string query = _folderId + "/files";
             LiveOperationResult operationResult = await _client.GetAsync(query);
+            var progressHandler = new Progress<LiveOperationProgress>(
+                    (progress) => { });
+            OneDriveManager.CancelToken = new System.Threading.CancellationTokenSource();
             dynamic result = operationResult.Result;
             foreach (dynamic file in result.data)
             {
                 fileNames.Add(file.name); //lame hack not to get runtimebinder exception caused by no getawaiter in object
                 newFile = await folder.CreateFileAsync(fileNames[fileNames.Count - 1], CreationCollisionOption.ReplaceExisting);
-                await _client.BackgroundDownloadAsync(file.id + "/Content", newFile);
+                await _client.BackgroundDownloadAsync(file.id + "/Content", newFile, OneDriveManager.CancelToken.Token,progressHandler);
             }
+            OneDriveManager.CancelToken = null;
         }
 
 
