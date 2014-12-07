@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Converters="using:BassBooster.Converters"
     x:Class="BassBooster.MainPage"
-    mc:Ignorable="d">
+    mc:Ignorable="d" KeyUp="KeyUp_Event">
 
     <Page.Resources>
         <Converters:NumberConverter x:Key="NumberConverter1"/>
@@ -81,7 +81,7 @@
         <Frame x:Name="TabFrame" Grid.Column="1" Grid.Row="1" />
         <Image x:Name="BgImage" Source="Assets/MainPage/background-218180.jpg" Grid.Column="1" Grid.Row="1" Stretch="UniformToFill" />
         <GridView x:Name="TrackListBox" SelectionMode="Single"  Grid.Column="1" Grid.Row="1"  BorderThickness="0" 
-                 VerticalAlignment="Top" DoubleTapped="TrackListBox_SelectionChanged" ManipulationMode="All" Background="Transparent" RequestedTheme="Dark" Margin="20,20,0,0">            
+                 VerticalAlignment="Top" DoubleTapped="TrackListBox_SelectionChanged" ManipulationMode="All" Background="Transparent" RequestedTheme="Dark" Margin="20,20,0,0" KeyUp="KeyUp_Event">            
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Grid Height="70" Width="450" Margin="10">

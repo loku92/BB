@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage;
+using Windows.System;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -37,6 +38,7 @@ namespace BassBooster
         private TrackList _Tracklist;
         private DispatcherTimer _Timer = new DispatcherTimer() ;//timer for slider
         private Repeat _Repeat;
+        private bool _IsKeyboardActive;
         
         
 
@@ -62,6 +64,7 @@ namespace BassBooster
             _Shuffle = false;            
             MP3Player.Volume = 1.0;
             TrackListBox.ItemsSource = null;
+            _IsKeyboardActive = true;
         }
         #endregion
 
@@ -108,11 +111,13 @@ namespace BassBooster
             {
                 if (t.ClassType.Equals(typeof(ListPage)))
                 {
+                    _IsKeyboardActive = true;
                     TrackListBox.Visibility = Visibility.Visible;
                     BgImage.Visibility = Visibility.Visible;
                 }
                 else
                 {
+                    _IsKeyboardActive = false;
                     TrackListBox.Visibility = Visibility.Collapsed;
                     BgImage.Visibility = Visibility.Collapsed;
                 }
@@ -271,6 +276,7 @@ namespace BassBooster
         /// </summary>
         private async void FileOpenButton_Click(object sender, RoutedEventArgs e)
         {
+            //check if was playing and flag it
             bool wasPlaying;
             if (MP3Player.CurrentState == MediaElementState.Playing)
             {
@@ -279,7 +285,7 @@ namespace BassBooster
             }
             else
                 wasPlaying = false;
-
+            //create file open picker to select new files to open
             Windows.Storage.Pickers.FileOpenPicker fop = new Windows.Storage.Pickers.FileOpenPicker();
             //adding file types
             fop.FileTypeFilter.Add(".mp3");
@@ -290,24 +296,26 @@ namespace BassBooster
             //if this.plyalist is empty create new list
             if (_Playlist == null)
                 _Playlist = new List<Windows.Storage.StorageFile>();
-
+            //open fop window
             IReadOnlyList<Windows.Storage.StorageFile> files = await fop.PickMultipleFilesAsync();
             //check if list of selected files isn't empty 
             if (files.Count > 0)
             {
-                //object for music properties
+                //object for music properties that contains artist,title,duration etc
                 MusicProperties musicProperties;               
                 int i = 0;
+                //foreach chosen file add it to _Playlist(files) and _Tracklist(list of titles)
                 foreach (var f in files)
                 {
                     _Playlist.Add(f);
                     musicProperties = await f.Properties.GetMusicPropertiesAsync();
-                    _Tracklist.Add(new Track (_Tracklist.Music.Count,musicProperties.Artist,musicProperties.Title,f.Name,musicProperties.Duration));
+                    _Tracklist.Add(new Track (_Tracklist.Music.Count,musicProperties.Artist,musicProperties.Title,f.Name,musicProperties.Duration));                    
                     i++;
                 }
                 //refresh track listbox 
                 TrackListBox.ItemsSource = null;
                 TrackListBox.ItemsSource = _Tracklist.Music;
+                // if wasn't playing set new source for MediaElement and update some UI elements
                 if (!wasPlaying)
                 {
                     var stream = await _Playlist[0].OpenAsync(Windows.Storage.FileAccessMode.Read);
@@ -319,11 +327,12 @@ namespace BassBooster
                     TileManager.UpdateTile(TitleBox.Text,time);
                     ToastManager.ShowToast(TitleBox.Text);
                 }
+                //if shuffle was on, shuffle list
                 if (_Shuffle)
                 {
                     Shuffle();
                 }
-
+                //select currently played song on list
                 TrackListBox.SelectedIndex = _CurrentId;                
                 _Empty = false;
                 MP3Player.Play();
@@ -331,7 +340,7 @@ namespace BassBooster
                 PlayButton.Icon = new SymbolIcon(Symbol.Pause);
 
             }
-            else //if no file was chosen then continue
+            else //if any file was chosen then continue
             {
                 if (wasPlaying)
                     MP3Player.Play();
@@ -341,11 +350,13 @@ namespace BassBooster
         //next
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_Repeat == Repeat.ALL)
+            if (_Empty == false)
             {
-                if (_Empty == false)
+                //check if isn't empty
+                if (_Repeat == Repeat.ALL)
                 {
                     MP3Player.Stop();
+                    //check if shuffle is on
                     if (!_Shuffle)
                         if (_CurrentId < (_Tracklist.Music.Count - 1))
                             _CurrentId++;
@@ -368,10 +379,9 @@ namespace BassBooster
                     }
                     CommonAction();
                 }
+                else
+                    CommonAction();
             }
-            else
-                CommonAction();
-
         }
 
 
@@ -640,9 +650,9 @@ namespace BassBooster
 
         #endregion
 
-        #region background
+        #region Background Image
         /// <summary>
-        /// Changes background image
+        /// BgAppButton_Click action
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -661,14 +671,51 @@ namespace BassBooster
             SetImage();
         }
 
+        /// <summary>
+        /// Changes bg image
+        /// </summary>
         private void SetImage()
         {
             string[] bg = { "Assets/MainPage/background-218180.jpg", "Assets/MainPage/green-19916.jpg", "Assets/MainPage/pink-19750.jpg", "Assets/MainPage/pink-240518.jpg" };
-             BitmapImage newBg = new BitmapImage(new Uri(this.BaseUri, bg[BgId]));
+            BitmapImage newBg = new BitmapImage(new Uri(this.BaseUri, bg[BgId]));
             BgImage.Source = newBg;
         }
 
         public static int BgId = 0;
+        #endregion
+
+        #region KeyListener
+
+        /// <summary>
+        /// Sets KeyUp event listening
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void KeyUp_Event(object sender, KeyRoutedEventArgs e)
+        {
+            if (_IsKeyboardActive)
+            {
+                switch (e.Key)
+                {
+                    case VirtualKey.Enter:
+                        _CurrentId = TrackListBox.SelectedIndex;
+                        CommonAction();
+                        break;
+                    case VirtualKey.N:
+                        NextButton_Click(null, null);
+                        break;
+                    case VirtualKey.B:
+                        PrevButton_Click(null, null);
+                        break;
+                    case VirtualKey.Space:
+                        PlayButton_Click(null, null);
+                        break;
+                    case VirtualKey.S:
+                        ShuffleButton_Click(null, null);
+                        break;
+                }
+            }
+        }
         #endregion
 
     }
