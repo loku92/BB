@@ -79,39 +79,25 @@ namespace BassBooster
             {
                 await OneDriveManager.SignInOneDriveAsync();
                 await OneDriveManager.GetFolderIdAsync();
-                DownloadButton.Visibility = Visibility.Visible;
-                UploadButton.Visibility = Visibility.Visible;
-                DeleteButton.Visibility = Visibility.Visible;
+                ShowButtons();
                 StatusBlock.Text = DateTime.Now.ToString("HH:mm") + " Successfully logged in.\n"; 
             }
             catch (LiveAuthException ex)
             {
                 LiveLoginButton.Content = "Retry";
-                LiveLoginButton.Visibility = Visibility.Visible;
-                DownloadButton.Visibility = Visibility.Collapsed;
-                UploadButton.Visibility = Visibility.Collapsed;
-                DeleteButton.Visibility = Visibility.Collapsed;
-                CancelUpload.Visibility = Visibility.Collapsed;
+                HideAllButtons();
                 StatusBlock.Text = DateTime.Now.ToString("HH:mm") + " Failed to log in. Try again. \n";
             }
             catch (LiveConnectException ex)
             {
                 LiveLoginButton.Content = "Retry";
-                LiveLoginButton.Visibility = Visibility.Visible;
-                DownloadButton.Visibility = Visibility.Collapsed;
-                UploadButton.Visibility = Visibility.Collapsed;
-                DeleteButton.Visibility = Visibility.Collapsed;
-                CancelUpload.Visibility = Visibility.Collapsed;
+                HideAllButtons();
                 StatusBlock.Text = DateTime.Now.ToString("HH:mm") + " Failed to log in. Try again. \n";
             }
             catch (NullReferenceException)
             {
                 LiveLoginButton.Content = "Retry";
-                LiveLoginButton.Visibility = Visibility.Visible;
-                DownloadButton.Visibility = Visibility.Collapsed;
-                UploadButton.Visibility = Visibility.Collapsed;
-                DeleteButton.Visibility = Visibility.Collapsed;
-                CancelUpload.Visibility = Visibility.Collapsed;
+                HideAllButtons();
                 StatusBlock.Text = DateTime.Now.ToString("HH:mm") + " Failed to log in. Try again. Did You accept the OneDrive license? \n";
             }
             CancelUpload.Visibility = Visibility.Collapsed;
@@ -145,9 +131,7 @@ namespace BassBooster
         /// <param name="e"></param>
         private async void Upload_Click(object sender, RoutedEventArgs e)
         {
-            UploadButton.Visibility = Visibility.Collapsed;
-            DeleteButton.Visibility = Visibility.Collapsed;
-            DownloadButton.Visibility = Visibility.Collapsed;
+            HideButtons();
             try
             {
                 await OneDriveManager.GetFolderIdAsync();
@@ -166,10 +150,7 @@ namespace BassBooster
             }
             finally
             {
-                CancelUpload.Visibility = Visibility.Collapsed;
-                UploadButton.Visibility = Visibility.Visible;
-                DownloadButton.Visibility = Visibility.Visible;
-                DeleteButton.Visibility = Visibility.Visible;
+                ShowButtons();
             }
         }
 
@@ -191,9 +172,7 @@ namespace BassBooster
         
         private async void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
-            UploadButton.Visibility = Visibility.Collapsed;
-            DeleteButton.Visibility = Visibility.Collapsed;
-            DownloadButton.Visibility = Visibility.Collapsed;
+            HideButtons();
             try
             {                
                 await OneDriveManager.GetFolderIdAsync();
@@ -212,11 +191,32 @@ namespace BassBooster
             }
             finally
             {
-                CancelUpload.Visibility = Visibility.Collapsed;
-                UploadButton.Visibility = Visibility.Visible;
-                DownloadButton.Visibility = Visibility.Visible;
-                DeleteButton.Visibility = Visibility.Visible;
+                ShowButtons(); 
             }
+        }
+
+        private void ShowButtons()
+        {
+            CancelUpload.Visibility = Visibility.Collapsed;
+            UploadButton.Visibility = Visibility.Visible;
+            DownloadButton.Visibility = Visibility.Visible;
+            DeleteButton.Visibility = Visibility.Visible;
+        }
+
+        private void HideButtons()
+        {
+            UploadButton.Visibility = Visibility.Collapsed;
+            DeleteButton.Visibility = Visibility.Collapsed;
+            DownloadButton.Visibility = Visibility.Collapsed;
+        }
+
+        private void HideAllButtons()
+        {
+            LiveLoginButton.Visibility = Visibility.Visible;
+            DownloadButton.Visibility = Visibility.Collapsed;
+            UploadButton.Visibility = Visibility.Collapsed;
+            DeleteButton.Visibility = Visibility.Collapsed;
+            CancelUpload.Visibility = Visibility.Collapsed;
         }
 
     }
