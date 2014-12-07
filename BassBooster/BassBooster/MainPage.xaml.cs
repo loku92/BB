@@ -147,7 +147,7 @@ namespace BassBooster
         {
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                NextButton_Click(null, null);
+                Next();
             });
         }
 
@@ -160,7 +160,7 @@ namespace BassBooster
         {
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                PrevButton_Click(null, null);
+                Prev();
             });
         }
 
@@ -224,7 +224,7 @@ namespace BassBooster
         private void MP3Player_MediaEnded(object sender, RoutedEventArgs e)
         {
             _Timer.Stop();
-            NextButton_Click(null, null);            
+            Next();            
         }
 
 
@@ -238,6 +238,72 @@ namespace BassBooster
             TimeSlider.Maximum = MP3Player.NaturalDuration.TimeSpan.TotalMilliseconds;
             _Timer.Interval = TimeSpan.FromMilliseconds(1);            
             _Timer.Start();
+        }
+
+        /// <summary>
+        /// Select next song and play
+        /// </summary>
+        private void Next()
+        {
+            if (_Empty == false)
+            {
+                //check if isn't empty
+                if (_Repeat == Repeat.ALL)
+                {
+                    MP3Player.Stop();
+                    //check if shuffle is on
+                    if (!_Shuffle)
+                        if (_CurrentId < (_Tracklist.Music.Count - 1))
+                            _CurrentId++;
+                        else
+                            _CurrentId = 0;
+                    else
+                    {
+                        _ShuffleId++;
+                        if (_ShuffleId >= _Playlist.Count)
+                            _ShuffleId = 0;
+                        try
+                        {
+                            _CurrentId = _ShufflePlaylist[_ShuffleId];
+                        }
+                        catch (ArgumentOutOfRangeException exception) //occures when 1st tracklist is loaded from files and shuffle is pressed
+                        {
+                            Shuffle();
+                            _CurrentId = _ShufflePlaylist[_ShuffleId];
+                        }
+                    }
+                    CommonAction();
+                }
+                else
+                    CommonAction();
+            }
+        }
+
+        /// <summary>
+        /// Select previous song and play
+        /// </summary>
+        private void Prev()
+        {
+            if (_Empty == false)
+            {
+                if (_Repeat == Repeat.ALL)
+                {
+                    MP3Player.Stop();
+                    if (!_Shuffle)
+                        if (_CurrentId > 0)
+                            _CurrentId--;
+                        else
+                            _CurrentId = _Tracklist.Music.Count - 1;
+                    else
+                    {
+                        _ShuffleId--;
+                        if (_ShuffleId < 0)
+                            _ShuffleId = _Playlist.Count - 1;
+                        _CurrentId = _ShufflePlaylist[_ShuffleId];
+                    }
+                }
+                CommonAction();
+            }
         }
 
         #endregion
@@ -350,65 +416,17 @@ namespace BassBooster
         //next
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_Empty == false)
-            {
-                //check if isn't empty
-                if (_Repeat == Repeat.ALL)
-                {
-                    MP3Player.Stop();
-                    //check if shuffle is on
-                    if (!_Shuffle)
-                        if (_CurrentId < (_Tracklist.Music.Count - 1))
-                            _CurrentId++;
-                        else
-                            _CurrentId = 0;
-                    else
-                    {
-                        _ShuffleId++;
-                        if (_ShuffleId >= _Playlist.Count)
-                            _ShuffleId = 0;
-                        try
-                        {
-                            _CurrentId = _ShufflePlaylist[_ShuffleId];
-                        }
-                        catch (ArgumentOutOfRangeException exception) //occures when 1st tracklist is loaded from files and shuffle is pressed
-                        {
-                            Shuffle();
-                            _CurrentId = _ShufflePlaylist[_ShuffleId];
-                        }
-                    }
-                    CommonAction();
-                }
-                else
-                    CommonAction();
-            }
+            Next(); 
         }
+
 
 
         //previous
         private void PrevButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_Empty == false)
-            {
-                if (_Repeat == Repeat.ALL)
-                {
-                    MP3Player.Stop();
-                    if (!_Shuffle)
-                        if (_CurrentId > 0)
-                            _CurrentId--;
-                        else
-                            _CurrentId = _Tracklist.Music.Count - 1;
-                    else
-                    {
-                        _ShuffleId--;
-                        if (_ShuffleId < 0)
-                            _ShuffleId = _Playlist.Count - 1;
-                        _CurrentId = _ShufflePlaylist[_ShuffleId];
-                    }
-                }
-                CommonAction();
-            }
+            Prev();
         }
+
 
         /// <summary>
         /// ClearListButton_Click
@@ -426,6 +444,7 @@ namespace BassBooster
                 TitleBox.Text = "Artist - Title";
                 _Playlist.Clear();
                 TileManager.ClearTile();
+                PlayButton.Icon = new SymbolIcon(Symbol.Play);
             }
         }
 
@@ -702,10 +721,10 @@ namespace BassBooster
                         CommonAction();
                         break;
                     case VirtualKey.N:
-                        NextButton_Click(null, null);
+                        Next();
                         break;
                     case VirtualKey.B:
-                        PrevButton_Click(null, null);
+                        Prev();
                         break;
                     case VirtualKey.Space:
                         PlayButton_Click(null, null);
