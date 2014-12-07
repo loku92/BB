@@ -84,12 +84,12 @@
                  VerticalAlignment="Top" DoubleTapped="TrackListBox_SelectionChanged" ManipulationMode="All" Background="Transparent" RequestedTheme="Dark" Margin="20,20,0,0">            
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Height="90" Width="480" Margin="10">
+                    <Grid Height="70" Width="450" Margin="10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Border  Width="100" Height="100">
+                        <Border  Width="50" Height="50">
                             <Image Stretch="UniformToFill" Source="{Binding Converter={StaticResource ImageConverter}}" />
                         </Border>
                         <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0,0,0">
@@ -109,7 +109,10 @@
             <AppBarButton x:Name="AuthorAppButton" Label="Author" Icon="Contact" Click="AuthorAppButton_Click"/>
             <CommandBar.SecondaryCommands>
                 <AppBarToggleButton x:Name="NotifAppButton" Label="Toast off" Icon="Message" Click="NotifAppButton_Clicked"/>
+                <AppBarSeparator />
                 <AppBarToggleButton x:Name="TileAppButton" Label="Dynamic tile on" Icon="SetTile" Click="TileAppButton_Clicked" IsChecked="True"/>
+                <AppBarSeparator />
+                <AppBarButton x:Name="BgAppButton" Label="Change background" Icon="Edit" Click="BgAppButton_Click"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

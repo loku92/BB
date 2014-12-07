@@ -1,21 +1,12 @@
 ﻿using BassBooster.Common;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Windows.UI.Notifications;
+using Windows.Storage;
+using System.Diagnostics;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
@@ -66,6 +57,23 @@ namespace BassBooster
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
+                    // App is being resumed afted being termination, so settings
+
+#if DEBUG
+                    Debug.WriteLine("App was terminated");
+#endif
+                    // should be restored.
+
+                    if (ApplicationData.Current.LocalSettings.Values.ContainsKey("BgId"))
+                    {
+#if DEBUG
+                        Debug.WriteLine("Contains BgId = " + ApplicationData.Current.LocalSettings.Values["BgId"]);
+#endif
+                        MainPage.BgId = (int)(ApplicationData.Current.LocalSettings.Values["BgId"]);
+#if DEBUG
+                        Debug.WriteLine("OnLaunched set BgId = " + MainPage.BgId);
+#endif
+                    }
                     // Restore the saved session state only when appropriate
                     try
                     {
@@ -91,6 +99,7 @@ namespace BassBooster
             }
             // Ensure the current window is active
             Window.Current.Activate();
+
         }
 
         /// <summary>

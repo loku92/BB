@@ -2,25 +2,19 @@
 using BassBooster.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Media;
 using Windows.Storage.FileProperties;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Windows.UI.Notifications;
-using Windows.Data.Xml.Dom;
-using Microsoft.Live;
 using Windows.UI.Popups;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Storage;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -91,6 +85,14 @@ namespace BassBooster
             {
                 NavTab.SelectedIndex = 0;
             }
+
+            //should be in onLaunched but sometimes it doesnt work there
+            if (ApplicationData.Current.LocalSettings.Values.ContainsKey("BgId"))
+            {
+                BgId = (int)(ApplicationData.Current.LocalSettings.Values["BgId"]);
+            }
+
+            SetImage();
         }
 
         /// <summary>
@@ -354,7 +356,15 @@ namespace BassBooster
                         _ShuffleId++;
                         if (_ShuffleId >= _Playlist.Count)
                             _ShuffleId = 0;
-                        _CurrentId = _ShufflePlaylist[_ShuffleId];
+                        try
+                        {
+                            _CurrentId = _ShufflePlaylist[_ShuffleId];
+                        }
+                        catch (ArgumentOutOfRangeException exception) //occures when 1st tracklist is loaded from files and shuffle is pressed
+                        {
+                            Shuffle();
+                            _CurrentId = _ShufflePlaylist[_ShuffleId];
+                        }
                     }
                     CommonAction();
                 }
@@ -524,6 +534,7 @@ namespace BassBooster
 
         #endregion
 
+
         #region Tabs
 
         /// <summary>
@@ -629,8 +640,39 @@ namespace BassBooster
 
         #endregion
 
+        #region background
+        /// <summary>
+        /// Changes background image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BgAppButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+            if (BgId == 3)
+            {
+                BgId = 0;
+            }
+            else
+            {
+                BgId++;
+            }
+            ApplicationData.Current.LocalSettings.Values["BgId"] = BgId;
+            SetImage();
+        }
+
+        private void SetImage()
+        {
+            string[] bg = { "Assets/MainPage/background-218180.jpg", "Assets/MainPage/green-19916.jpg", "Assets/MainPage/pink-19750.jpg", "Assets/MainPage/pink-240518.jpg" };
+             BitmapImage newBg = new BitmapImage(new Uri(this.BaseUri, bg[BgId]));
+            BgImage.Source = newBg;
+        }
+
+        public static int BgId = 0;
+        #endregion
 
     }
+
 
     /// <summary>
     /// Repeat
