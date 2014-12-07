@@ -11,8 +11,8 @@ namespace BassBooster.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            Random rnd = new Random((int)DateTime.Now.Ticks);
-            return "Assets/" + rnd.Next(17) +".png";
+            Random rnd = new Random(/*(int)DateTime.Now.Ticks*/);
+            return "Assets/PlaylistImages/" + rnd.Next(17) +".png";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
