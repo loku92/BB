@@ -141,7 +141,7 @@
     <None Include="Package.StoreAssociation.xml" />
     <None Include="BassBooster_TemporaryKey.pfx" />
     <Content Include="Assets\MainPage\background-218180.jpg" />
-    <Content Include="Assets\MainPage\background-473808.jpg" />
+    <Content Include="Assets\MainPage\green-19916.jpg" />
     <Content Include="Assets\MainPage\license.txt" />
     <Content Include="Assets\MainPage\pink-19750.jpg" />
     <Content Include="Assets\MainPage\pink-240518.jpg" />
