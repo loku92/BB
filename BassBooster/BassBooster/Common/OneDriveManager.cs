@@ -84,7 +84,7 @@ namespace BassBooster.Common
         /// Downloads all files from BBLyrics folder in OneDrive cloud to Music folder
         /// </summary>
         /// <returns></returns>
-        public static async Task DownloadFilesAsync()
+        public static async Task DownloadFilesAsync(Progress<LiveOperationProgress> progress)
         {
             await CheckIfExists();
             StorageFolder folder = Windows.Storage.KnownFolders.MusicLibrary;
@@ -92,15 +92,13 @@ namespace BassBooster.Common
             List<string> fileNames = new List<string>();
             string query = _folderId + "/files";
             LiveOperationResult operationResult = await _client.GetAsync(query);
-            var progressHandler = new Progress<LiveOperationProgress>(
-                    (progress) => { });
             OneDriveManager.CancelToken = new System.Threading.CancellationTokenSource();
             dynamic result = operationResult.Result;
             foreach (dynamic file in result.data)
             {
                 fileNames.Add(file.name); //lame hack not to get runtimebinder exception caused by no getawaiter in object
                 newFile = await folder.CreateFileAsync(fileNames[fileNames.Count - 1], CreationCollisionOption.ReplaceExisting);
-                await _client.BackgroundDownloadAsync(file.id + "/Content", newFile, OneDriveManager.CancelToken.Token,progressHandler);
+                await _client.BackgroundDownloadAsync(file.id + "/Content", newFile, OneDriveManager.CancelToken.Token,progress);
             }
             OneDriveManager.CancelToken = null;
         }
@@ -110,7 +108,7 @@ namespace BassBooster.Common
         /// Uploads selected files to skydrive
         /// </summary>
         /// <returns></returns>
-        public static async Task UploadFilesAsync()
+        public static async Task UploadFilesAsync(Progress<LiveOperationProgress> progress)
         {
             await CheckIfExists();
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
@@ -119,13 +117,11 @@ namespace BassBooster.Common
             IReadOnlyList<Windows.Storage.StorageFile> files = await picker.PickMultipleFilesAsync();
             if (files.Count > 0)
             {
-                var progressHandler = new Progress<LiveOperationProgress>(
-                    (progress) => { });
                 OneDriveManager.CancelToken = new System.Threading.CancellationTokenSource();
                 foreach (var file in files)
                 {
                     await _client.BackgroundUploadAsync(OneDriveManager._folderId,
-                        file.Name, file, Microsoft.Live.OverwriteOption.Overwrite, OneDriveManager.CancelToken.Token, progressHandler);
+                        file.Name, file, Microsoft.Live.OverwriteOption.Overwrite, OneDriveManager.CancelToken.Token, progress);
                 }
                 OneDriveManager.CancelToken = null;
             }
