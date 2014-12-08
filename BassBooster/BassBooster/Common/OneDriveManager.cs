@@ -9,13 +9,12 @@ namespace BassBooster.Common
     /// <summary>
     /// Class to Manage connection with WindowsLive and synchronizing files with OneDrive
     /// </summary>
-    public class OneDriveManager
+    public static class OneDriveManager
     {
         public static LiveConnectClient _client = null;
         public static string _folderId;
         public static System.Threading.CancellationTokenSource CancelToken;
-        private const string FOLDER_NAME = "BBLyrics";
-        private string ext = ".bbf";
+        public static const string FOLDER_NAME = "BassBooster";
 
 
         /// <summary>
@@ -114,6 +113,9 @@ namespace BassBooster.Common
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
             picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
             picker.FileTypeFilter.Add(".bbf");
+            picker.FileTypeFilter.Add(".mp3");
+            picker.FileTypeFilter.Add(".wav");
+            picker.FileTypeFilter.Add(".aac");
             IReadOnlyList<Windows.Storage.StorageFile> files = await picker.PickMultipleFilesAsync();
             if (files.Count > 0)
             {
