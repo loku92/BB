@@ -7,7 +7,7 @@ namespace BassBooster.Common
     /// <summary>
     /// Class for managing toast notifications
     /// </summary>
-    public class ToastManager
+    public static class ToastManager
     {
         public static bool isEnabled = false;
 
