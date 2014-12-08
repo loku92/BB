@@ -7,7 +7,7 @@ namespace BassBooster.Common
     /// <summary>
     /// Class for managing Tile notifications
     /// </summary>
-    public class TileManager
+    public static class TileManager
     {
         public static bool isEnabled = true;
 
