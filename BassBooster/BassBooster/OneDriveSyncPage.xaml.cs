@@ -33,6 +33,7 @@ namespace BassBooster
                 UploadButton.Visibility = Visibility.Collapsed;
                 DeleteButton.Visibility = Visibility.Collapsed;
                 CancelUpload.Visibility = Visibility.Collapsed;
+                Cancel2.Visibility = Visibility.Collapsed;
                 StatusBlock.Text = DateTime.Now.ToString("HH:mm") + " Logging into OneDrive.\n"; 
                 LiveLoginButton_Click(null, null);
             }
@@ -42,6 +43,7 @@ namespace BassBooster
                 UploadButton.Visibility = Visibility.Visible;
                 DeleteButton.Visibility = Visibility.Visible;
                 CancelUpload.Visibility = Visibility.Collapsed;
+                Cancel2.Visibility = Visibility.Collapsed;
                 LiveLoginButton.Visibility = Visibility.Collapsed;
             }
         }
@@ -168,7 +170,7 @@ namespace BassBooster
                     (progress) => { SynchroProgressBar.Value = progress.ProgressPercentage; });
                 await OneDriveManager.GetFolderIdAsync();
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Downloading please wait...\n";
-                CancelUpload.Visibility = Visibility.Visible;
+                Cancel2.Visibility = Visibility.Visible;
                 await OneDriveManager.DownloadFilesAsync(progressHandler);
                 StatusBlock.Text += DateTime.Now.ToString("HH:mm") + " Files were downloaded successfully to Music Directory\n";
             }
@@ -190,6 +192,7 @@ namespace BassBooster
         {
             SynchroProgressBar.Visibility = Visibility.Collapsed;
             CancelUpload.Visibility = Visibility.Collapsed;
+            Cancel2.Visibility = Visibility.Collapsed;
             UploadButton.Visibility = Visibility.Visible;
             DownloadButton.Visibility = Visibility.Visible;
             DeleteButton.Visibility = Visibility.Visible;
@@ -198,10 +201,10 @@ namespace BassBooster
         private void HideButtons()
         {
             SynchroProgressBar.Value = 0;
-            SynchroProgressBar.Visibility = Visibility.Visible;
             UploadButton.Visibility = Visibility.Collapsed;
             DeleteButton.Visibility = Visibility.Collapsed;
             DownloadButton.Visibility = Visibility.Collapsed;
+            SynchroProgressBar.Visibility = Visibility.Visible;
         }
 
         private void HideAllButtons()
@@ -212,6 +215,7 @@ namespace BassBooster
             UploadButton.Visibility = Visibility.Collapsed;
             DeleteButton.Visibility = Visibility.Collapsed;
             CancelUpload.Visibility = Visibility.Collapsed;
+            Cancel2.Visibility = Visibility.Collapsed;
         }
 
     }

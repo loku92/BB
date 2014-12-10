@@ -14,7 +14,7 @@ namespace BassBooster.Common
         public static LiveConnectClient _client = null;
         public static string _folderId;
         public static System.Threading.CancellationTokenSource CancelToken;
-        public static const string FOLDER_NAME = "BassBooster";
+        public static string FOLDER_NAME = "BassBooster";
 
 
         /// <summary>
