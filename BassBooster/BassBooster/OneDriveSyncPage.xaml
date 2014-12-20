@@ -14,9 +14,9 @@
         </ScrollViewer>
         <Button x:Name="DeleteButton" Content="Delete" HorizontalAlignment="Left" Margin="30,231,0,0" VerticalAlignment="Top" Click="DeleteButton_Click" Width="156"/>
         <Button x:Name="UploadButton" Content="Upload" HorizontalAlignment="Left" Margin="30,162,0,0" VerticalAlignment="Top" Click="Upload_Click" Width="156"/>
-        <Button x:Name="CancelUpload" Content="Cancel" HorizontalAlignment="Left" Margin="194,162,0,0" VerticalAlignment="Top" Click="CancelUpload_Click"/>
+        <Button x:Name="CancelUpload" Content="Cancel" HorizontalAlignment="Left" Margin="194,162,0,0" VerticalAlignment="Top" Click="CancelUpload_Click" Style="{StaticResource ButtonX}"/>
         <Button x:Name="DownloadButton" Content="Download" HorizontalAlignment="Left" Margin="30,96,0,0" VerticalAlignment="Top" Click="DownloadButton_Click" Width="156"/>
         <ProgressBar x:Name="SynchroProgressBar"  HorizontalAlignment="Left" Height="37" Margin="33,304,0,0" VerticalAlignment="Top" Width="204" Foreground="#FF69E017" Visibility="Collapsed"/>
-        <Button x:Name="Cancel2" Content="Cancel" HorizontalAlignment="Left" Margin="194,96,0,0" VerticalAlignment="Top" Click="CancelUpload_Click"/>
+        <Button x:Name="Cancel2" Content="Cancel" HorizontalAlignment="Left" Margin="194,96,0,0" VerticalAlignment="Top" Click="CancelUpload_Click" Style="{StaticResource ButtonX}"/>
     </Grid>
 </Page>
